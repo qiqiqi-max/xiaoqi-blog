@@ -1,0 +1,19 @@
+---
+import ArticleLayout from "@/layouts/ArticleLayout.astro";
+import { getPublishedTools } from "@/lib/content";
+import { render } from "astro:content";
+
+export async function getStaticPaths() {
+  const tools = await getPublishedTools();
+  return tools
+    .filter((tool) => !tool.data.link)
+    .map((tool) => ({ params: { slug: tool.id }, props: { tool } }));
+}
+
+const { tool } = Astro.props;
+const { Content, headings } = await render(tool);
+---
+
+<ArticleLayout {...tool.data} body={tool.body} headings={headings} section="工具箱" type="tool">
+  <Content />
+</ArticleLayout>

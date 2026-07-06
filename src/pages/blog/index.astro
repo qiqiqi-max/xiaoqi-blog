@@ -1,0 +1,42 @@
+---
+import CollectionOverview from "@/components/CollectionOverview.astro";
+import EntryCard from "@/components/EntryCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getPublishedBlog } from "@/lib/content";
+
+const posts = await getPublishedBlog();
+const featuredCount = posts.filter((post) => post.data.featured).length;
+const tagCount = new Set(posts.flatMap((post) => post.data.tags)).size;
+---
+
+<BaseLayout title="博客" description="正式文章、长期观点和完整教程。">
+  <section class="container">
+    <header class="page-head">
+      <div>
+        <h1>博客</h1>
+        <p>正式文章、长期观点、完整教程和可以被搜索引擎索引的知识资产。</p>
+      </div>
+      <div class="page-actions">
+        <a class="button-primary" href="/studio?type=blog">添加文章</a>
+        <a class="button-secondary" href="/search">搜索文章</a>
+      </div>
+    </header>
+    <CollectionOverview
+      eyebrow="正式写作区"
+      title="把可长期引用的内容沉淀成文章"
+      description="博客模块适合放完整教程、深度复盘、长期观点和公开分享内容。每篇文章都会进入 RSS、站点地图和 Pagefind 搜索索引。"
+      ctaHref="/rss.xml"
+      ctaLabel="订阅 RSS"
+      metrics={[
+        { label: "文章数量", value: `${posts.length} 篇`, note: "公开发布" },
+        { label: "精选文章", value: `${featuredCount} 篇`, note: "可用于首页突出展示" },
+        { label: "标签覆盖", value: `${tagCount} 个`, note: "便于主题归档" }
+      ]}
+    />
+    <div class="content-grid py-8">
+      {posts.map((post) => (
+        <EntryCard href={`/blog/${post.id}`} title={post.data.title} description={post.data.description} date={post.data.date} tags={post.data.tags} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

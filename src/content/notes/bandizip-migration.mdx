@@ -1,0 +1,29 @@
+---
+title: "Bandizip 从桌面迁移到 D 盘"
+description: "把便携版 Bandizip 从桌面完整迁移到 D:\\APPs，并修复打开方式。"
+date: 2026-06-06
+tags: ["Windows", "软件整理", "Bandizip", "迁移"]
+category: "Windows"
+summary: "移动程序目录、更新快捷方式、修复 HKCU 打开命令，并处理 dllhost 占用。"
+language: "zh"
+---
+
+目标：把桌面上的 Bandizip 程序本体迁移到：
+
+```text
+D:\APPs\Bandizip
+```
+
+关键步骤：
+
+1. 比对移动前后的文件数量和大小。
+2. 更新桌面快捷方式。
+3. 更新用户级打开命令：
+
+```text
+HKCU\Software\Classes\Applications\Bandizip.exe\shell\open\command
+```
+
+4. 处理 `dllhost.exe` 占用的 `bzshell.x64.dll`。
+
+最后确认 Bandizip 从新路径启动，窗口正常响应。

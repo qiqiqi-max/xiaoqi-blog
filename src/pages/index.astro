@@ -1,0 +1,214 @@
+---
+import EntryCard from "@/components/EntryCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getPublishedBlog, getPublishedNotes, getPublishedProjects, getPublishedTools } from "@/lib/content";
+import { site } from "@/lib/site";
+
+const [posts, notes, projects, tools] = await Promise.all([
+  getPublishedBlog(),
+  getPublishedNotes(),
+  getPublishedProjects(),
+  getPublishedTools()
+]);
+const latest = [...posts, ...notes, ...projects, ...tools]
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 4);
+const hrefMap: Record<string, string> = {
+  blog: "blog",
+  notes: "notes",
+  projects: "projects",
+  tools: "tools"
+};
+const collectionLabels: Record<string, string> = {
+  blog: "博客",
+  notes: "笔记",
+  projects: "项目",
+  tools: "工具箱"
+};
+const modules = [
+  {
+    index: "01",
+    title: "博客",
+    label: "正式文章",
+    href: "/blog",
+    count: posts.length,
+    description: "长期观点、技术复盘和完整教程，适合沉淀可反复引用的内容。",
+    latest: posts[0]?.data.title ?? "等待第一篇文章"
+  },
+  {
+    index: "02",
+    title: "笔记",
+    label: "短记录",
+    href: "/notes",
+    count: notes.length,
+    description: "排障过程、命令片段、软件问题和临时想法，优先保证以后能查到。",
+    latest: notes[0]?.data.title ?? "等待第一条笔记"
+  },
+  {
+    index: "03",
+    title: "项目",
+    label: "作品档案",
+    href: "/projects",
+    count: projects.length,
+    description: "记录目标、技术栈、进展和复盘，把个人作品长期维护起来。",
+    latest: projects[0]?.data.title ?? "等待第一个项目"
+  },
+  {
+    index: "04",
+    title: "工具箱",
+    label: "效率入口",
+    href: "/tools",
+    count: tools.length,
+    description: "常用软件、脚本、链接和工作流入口，避免工具信息散落在桌面。",
+    latest: tools[0]?.data.title ?? "等待第一个工具"
+  }
+];
+---
+
+<BaseLayout title="首页" description={site.description}>
+  <section class="container py-10 md:py-14">
+    <div class="hero-grid">
+      <div class="hero-panel surface">
+        <div>
+          <p class="hero-kicker">AI 驱动的个人知识中枢</p>
+          <h1 class="hero-title">小七的长期个人知识系统</h1>
+          <p class="hero-copy">
+            用静态站承载长期知识，把博客、笔记、项目和工具沉淀成一个可搜索、可迁移、可持续扩展的个人系统。
+          </p>
+          <div class="hero-actions">
+            <a href="/studio" class="button-primary">添加内容</a>
+            <a href="/search" class="button-secondary">搜索知识库</a>
+            <a href="/blog" class="button-secondary">阅读博客</a>
+            <a href="/notes" class="button-secondary">查看笔记</a>
+          </div>
+        </div>
+        <nav class="hero-module-strip" aria-label="核心内容入口">
+          {modules.map((item) => (
+            <a href={item.href} class="hero-module-link">
+              <span>{item.label}</span>
+              <strong>{item.title}</strong>
+              <small>{item.count} 条</small>
+            </a>
+          ))}
+        </nav>
+      </div>
+
+      <aside class="metric-grid" aria-label="站点概览">
+        <dl class="metric surface">
+          <dt>内容资产</dt>
+          <dd>{posts.length + notes.length + projects.length + tools.length} 条记录</dd>
+        </dl>
+        <dl class="metric surface">
+          <dt>发布方式</dt>
+          <dd>静态 Jamstack</dd>
+        </dl>
+        <dl class="metric surface">
+          <dt>站内搜索</dt>
+          <dd>Pagefind 索引</dd>
+        </dl>
+        <dl class="metric surface">
+          <dt>AI 流程</dt>
+          <dd>构建期增强</dd>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="container py-8" aria-labelledby="modules-title">
+    <div class="section-head">
+      <div>
+        <h2 id="modules-title" class="text-2xl">功能入口</h2>
+        <p>博客、笔记、项目和工具箱已经拆成独立模块，首页直接进入对应工作区。</p>
+      </div>
+      <a href="/tags">按标签浏览</a>
+    </div>
+    <div class="module-grid">
+      {modules.map((item) => (
+        <a href={item.href} class="module-card">
+          <div class="module-card__top">
+            <span class="module-card__index">{item.index}</span>
+            <span class="module-card__count">{item.count} 条{item.label}</span>
+          </div>
+          <h3>{item.title}</h3>
+          <p>{item.description}</p>
+          <div class="module-card__latest">
+            <span>最新</span>
+            <strong>{item.latest}</strong>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="container py-8">
+    <div class="section-head">
+      <div>
+        <h2 class="text-2xl">最新更新</h2>
+        <p>最近沉淀的文章、笔记、项目和工具记录。</p>
+      </div>
+      <a href="/search">进入搜索</a>
+    </div>
+    <div class="content-grid">
+      {latest.map((entry) => {
+        const tags = "stack" in entry.data && entry.data.stack.length ? entry.data.stack : entry.data.tags;
+        return (
+          <EntryCard
+            href={`/${hrefMap[entry.collection]}/${entry.id}`}
+            title={entry.data.title}
+            description={entry.data.description}
+            date={entry.data.date}
+            tags={tags}
+            kind={collectionLabels[entry.collection]}
+          />
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="container py-8">
+    <div class="section-head">
+      <div>
+        <h2 class="text-2xl">个人工作台</h2>
+        <p>把高频使用的笔记、项目和工具放在首页下半屏，减少来回找入口的成本。</p>
+      </div>
+      <a href="/search">全站搜索</a>
+    </div>
+    <div class="workspace-grid">
+      <section class="workspace-column" aria-labelledby="recent-notes-title">
+        <div class="workspace-column__head">
+          <h3 id="recent-notes-title">最近笔记</h3>
+          <a href="/notes">全部笔记</a>
+        </div>
+        <div class="workspace-list">
+          {notes.slice(0, 2).map((note) => (
+            <EntryCard href={`/notes/${note.id}`} title={note.data.title} description={note.data.description} date={note.data.date} tags={note.data.tags} />
+          ))}
+        </div>
+      </section>
+
+      <section class="workspace-column" aria-labelledby="project-progress-title">
+        <div class="workspace-column__head">
+          <h3 id="project-progress-title">项目进展</h3>
+          <a href="/projects">全部项目</a>
+        </div>
+        <div class="workspace-list">
+          {projects.slice(0, 2).map((project) => (
+            <EntryCard href={`/projects/${project.id}`} title={project.data.title} description={project.data.description} date={project.data.date} tags={project.data.stack} />
+          ))}
+        </div>
+      </section>
+
+      <section class="workspace-column workspace-column--wide" aria-labelledby="tools-title">
+        <div class="workspace-column__head">
+          <h3 id="tools-title">工具箱</h3>
+          <a href="/tools">全部工具</a>
+        </div>
+        <div class="workspace-list workspace-list--tools">
+          {tools.slice(0, 2).map((tool) => (
+            <EntryCard href={tool.data.link || `/tools/${tool.id}`} title={tool.data.title} description={tool.data.description} date={tool.data.date} tags={tool.data.tags} />
+          ))}
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>

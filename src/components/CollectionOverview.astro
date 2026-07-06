@@ -1,0 +1,36 @@
+---
+type Metric = {
+  label: string;
+  value: string;
+  note?: string;
+};
+
+type Props = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  metrics: Metric[];
+  ctaHref?: string;
+  ctaLabel?: string;
+};
+
+const { eyebrow, title, description, metrics, ctaHref, ctaLabel } = Astro.props;
+---
+
+<section class="collection-overview" aria-label={`${title}模块概览`}>
+  <div class="collection-overview__intro surface">
+    <p class="collection-overview__eyebrow">{eyebrow}</p>
+    <h2>{title}</h2>
+    <p>{description}</p>
+    {ctaHref && ctaLabel && <a class="button-primary" href={ctaHref}>{ctaLabel}</a>}
+  </div>
+  <div class="collection-overview__stats">
+    {metrics.map((metric) => (
+      <dl class="collection-stat surface">
+        <dt>{metric.label}</dt>
+        <dd>{metric.value}</dd>
+        {metric.note && <dd class="collection-stat__note">{metric.note}</dd>}
+      </dl>
+    ))}
+  </div>
+</section>

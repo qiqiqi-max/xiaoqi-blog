@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#111418"/>
+  <rect x="72" y="72" width="1056" height="486" rx="28" fill="#181d24" stroke="#2dd4bf" stroke-opacity=".35"/>
+  <text x="116" y="226" fill="#2dd4bf" font-family="Microsoft YaHei, PingFang SC, Segoe UI, sans-serif" font-size="34" font-weight="700">AI 驱动的个人知识中枢</text>
+  <text x="116" y="326" fill="#edf1f7" font-family="Microsoft YaHei, PingFang SC, Segoe UI, sans-serif" font-size="70" font-weight="700">小七的 AI 知识花园</text>
+  <text x="116" y="402" fill="#9aa4b2" font-family="Microsoft YaHei, PingFang SC, Segoe UI, sans-serif" font-size="30">静态部署 · MDX 内容 · AI 辅助写作</text>
+</svg>

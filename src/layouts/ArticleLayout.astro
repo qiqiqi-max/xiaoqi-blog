@@ -1,0 +1,184 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { formatDate, readingTime, slugifyTag, site } from "@/lib/site";
+
+type Heading = {
+  depth: number;
+  slug: string;
+  text: string;
+};
+
+type Props = {
+  title: string;
+  description: string;
+  date: Date;
+  updated?: Date;
+  tags?: string[];
+  category?: string;
+  body?: string;
+  cover?: string;
+  headings?: Heading[];
+  section?: string;
+  type?: string;
+};
+
+const {
+  title,
+  description,
+  date,
+  updated,
+  tags = [],
+  category,
+  body = "",
+  cover,
+  headings = [],
+  section = "文章",
+  type: contentType = "article"
+} = Astro.props;
+const tagHref = (tag: string) => `/tags/${encodeURI(slugifyTag(tag))}`;
+const tocHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
+const canonical = new URL(Astro.url.pathname, site.url).toString();
+const imageUrl = new URL(cover ?? "/og/default.svg", site.url).toString();
+const publishedIso = date.toISOString();
+const updatedIso = (updated ?? date).toISOString();
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": contentType === "project" ? "CreativeWork" : "BlogPosting",
+  headline: title,
+  description,
+  image: imageUrl,
+  datePublished: publishedIso,
+  dateModified: updatedIso,
+  author: {
+    "@type": "Person",
+    name: site.author
+  },
+  publisher: {
+    "@type": "Organization",
+    name: site.name,
+    logo: {
+      "@type": "ImageObject",
+      url: new URL("/favicon.svg", site.url).toString()
+    }
+  },
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": canonical
+  },
+  keywords: tags.join(", ")
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={cover}
+  type="article"
+  publishedTime={date}
+  modifiedTime={updated ?? date}
+  tags={tags}
+  jsonLd={jsonLd}
+  pagefind={{
+    filters: {
+      "栏目": section,
+      "分类": category,
+      "标签": tags
+    },
+    sorts: {
+      date: String(date.valueOf())
+    }
+  }}
+>
+  <div class="article-shell py-10">
+    <article class="article-main">
+      <header class="mb-8">
+        <div class="mb-4 flex flex-wrap gap-2">
+          <span class="chip">{section}</span>
+          {category && <span class="chip">{category}</span>}
+          <span class="chip">{formatDate(date)}</span>
+          {updated && <span class="chip">更新于 {formatDate(updated)}</span>}
+          <span class="chip">{readingTime(body)}</span>
+        </div>
+        <h1 class="mb-4 text-4xl font-semibold leading-tight md:text-5xl">{title}</h1>
+        <p class="text-lg text-[var(--muted)]">{description}</p>
+        {tags.length > 0 && (
+          <div class="mt-5 flex flex-wrap gap-2">
+            {tags.map((tag) => <a class="chip" href={tagHref(tag)} aria-label={`查看标签：${tag}`}>#{tag}</a>)}
+          </div>
+        )}
+      </header>
+
+      {tocHeadings.length > 0 && (
+        <nav class="toc-panel toc-mobile surface" aria-label="文章目录">
+          <h2>目录</h2>
+          <div>
+            {tocHeadings.map((heading) => (
+              <a class={`toc-link depth-${heading.depth}`} href={`#${heading.slug}`}>
+                {heading.text}
+              </a>
+            ))}
+          </div>
+        </nav>
+      )}
+
+      <div class="prose" data-pagefind-body>
+        <slot />
+      </div>
+    </article>
+
+    {tocHeadings.length > 0 && (
+      <aside class="toc-desktop" data-pagefind-ignore>
+        <nav class="toc-panel surface" aria-label="文章目录">
+          <h2>目录</h2>
+          <div>
+            {tocHeadings.map((heading) => (
+              <a class={`toc-link depth-${heading.depth}`} href={`#${heading.slug}`}>
+                {heading.text}
+              </a>
+            ))}
+          </div>
+        </nav>
+      </aside>
+    )}
+  </div>
+
+  <script is:inline>
+    const initCodeCopy = () => {
+      document.querySelectorAll(".prose pre").forEach((pre) => {
+        if (!(pre instanceof HTMLElement) || pre.dataset.copyReady === "true") return;
+        const code = pre.querySelector("code");
+        if (!code) return;
+        pre.dataset.copyReady = "true";
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "code-frame";
+        pre.parentNode?.insertBefore(wrapper, pre);
+        wrapper.appendChild(pre);
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "code-copy";
+        button.textContent = "复制";
+        button.setAttribute("aria-label", "复制代码");
+        button.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(code.textContent ?? "");
+            button.textContent = "已复制";
+            window.setTimeout(() => {
+              button.textContent = "复制";
+            }, 1400);
+          } catch {
+            button.textContent = "复制失败";
+            window.setTimeout(() => {
+              button.textContent = "复制";
+            }, 1400);
+          }
+        });
+        wrapper.appendChild(button);
+      });
+    };
+
+    initCodeCopy();
+    document.addEventListener("astro:page-load", initCodeCopy);
+  </script>
+</BaseLayout>

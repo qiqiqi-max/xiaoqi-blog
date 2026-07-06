@@ -1,0 +1,21 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getAllPublishedContent, getAllTags } from "@/lib/content";
+import { slugifyTag } from "@/lib/site";
+
+const entries = await getAllPublishedContent();
+const tags = getAllTags(entries);
+const tagHref = (tag: string) => `/tags/${encodeURI(slugifyTag(tag))}`;
+---
+
+<BaseLayout title="标签" description="按标签浏览所有内容。">
+  <section class="container py-10">
+    <h1 class="mb-3 text-4xl font-semibold">标签</h1>
+    <p class="mb-8 max-w-2xl text-[var(--muted)]">用标签穿过文章、笔记、项目和工具箱。</p>
+    <div class="flex flex-wrap gap-3">
+      {tags.map(({ tag, count }) => (
+        <a class="chip text-base" href={tagHref(tag)}>#{tag} <span class="ml-1 text-[var(--muted)]">{count}</span></a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

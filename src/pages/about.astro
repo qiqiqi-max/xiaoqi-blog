@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { site } from "@/lib/site";
+---
+
+<BaseLayout title="关于" description={`关于 ${site.author} 和这个数字花园。`}>
+  <section class="reading-container py-10">
+    <h1 class="mb-4 text-4xl font-semibold">关于</h1>
+    <div class="prose">
+      <p>这里是 {site.author} 的长期个人数字花园，用来保存学习、项目、工具、排障记录和 AI 辅助写作流程。</p>
+      <p>这个站点的生产环境是纯静态架构，可以部署到 Cloudflare Pages 或 Vercel，并绑定自己的域名长期免费运行。</p>
+      <h2>原则</h2>
+      <ul>
+        <li>构建阶段重度使用 AI，生产阶段保持静态免费。</li>
+        <li>内容用 Git 和 MDX 保存，避免数据库锁定。</li>
+        <li>每一次折腾都沉淀成可搜索的笔记。</li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
