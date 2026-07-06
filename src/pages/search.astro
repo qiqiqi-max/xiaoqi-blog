@@ -1,51 +1,42 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import AdvancedSearch from "@components/pages/AdvancedSearch.svelte";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { url } from "@/utils/url-utils";
+
+const title = i18n(I18nKey.search);
+const description = "";
 ---
 
-<BaseLayout title="搜索" description="搜索小七的个人数字花园。">
-  <section class="container py-10">
-    <h1 class="mb-3 text-4xl font-semibold">搜索</h1>
-    <p class="mb-8 max-w-2xl text-[var(--muted)]">站内搜索索引在构建阶段生成，生产环境不需要数据库和后端。</p>
-    <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
-    <div id="search" class="surface rounded-lg p-4"></div>
-    <script is:inline type="module">
-      import "/pagefind/pagefind-ui.js";
+<MainGridLayout title={title} description={description}>
+    <div class="min-h-[80vh]">
+        <AdvancedSearch client:load title={title} description={description} />
+    </div>
+</MainGridLayout>
 
-      const PagefindUI = window.PagefindUI;
-      if (!PagefindUI) {
-        throw new Error("Pagefind UI 加载失败");
-      }
-
-      new PagefindUI({
-        element: "#search",
-        showSubResults: true,
-        showImages: false,
-        showEmptyFilters: false,
-        openFilters: ["栏目", "分类"],
-        focusOnSlash: true,
-        sort: {
-          date: "desc"
-        },
-        translations: {
-          language: "zh-CN",
-          placeholder: "搜索文章、笔记、项目...",
-          clear_search: "清除",
-          load_more: "加载更多结果",
-          search_label: "站内搜索",
-          filters_label: "筛选",
-          zero_results: "没有找到 [SEARCH_TERM] 的相关结果",
-          many_results: "找到 [COUNT] 个 [SEARCH_TERM] 的相关结果",
-          one_result: "找到 [COUNT] 个 [SEARCH_TERM] 的相关结果",
-          total_zero_results: "没有结果",
-          total_one_result: "[COUNT] 个结果",
-          total_many_results: "[COUNT] 个结果",
-          searching: "正在搜索 [SEARCH_TERM]...",
-          results_label: "搜索结果",
-          error_search: "搜索失败",
-          input_hint: "输入关键词后会显示结果",
-          loading: "加载中"
+{import.meta.env.PROD && (
+<script is:inline define:vars={{ scriptUrl: url('/pagefind/pagefind.js') }}>
+    if (!window.pagefind) {
+        async function loadPagefind() {
+            const url = scriptUrl.replace(/\/$/, "")
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                if (response.status !== 200) {
+                    return;
+                }
+                const pagefind = await import(scriptUrl);
+                await pagefind.options({
+                    "excerptLength": 20
+                });
+                window.pagefind = pagefind;
+                window.dispatchEvent(new Event('pagefindready'));
+            } catch (error) {
+                console.warn("Pagefind script not found or failed to load.");
+                window.dispatchEvent(new Event('pagefindloaderror'));
+            }
         }
-      });
-    </script>
-  </section>
-</BaseLayout>
+        loadPagefind();
+    }
+</script>
+)}
