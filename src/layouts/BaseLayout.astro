@@ -37,16 +37,12 @@ const isActive = (href: string) =>
   href === "/" ? currentPath === "/" : currentPath === href || currentPath.startsWith(`${href}/`);
 const navClass = (href: string) =>
   [
-    "rounded-md px-3 py-2 text-sm transition whitespace-nowrap",
-    isActive(href)
-      ? "bg-teal-700 text-white dark:bg-teal-300 dark:text-slate-950"
-      : "text-[var(--muted)] hover:bg-black/5 hover:text-[var(--text)] dark:hover:bg-white/5"
+    "nav-link px-3 py-2 text-sm font-bold whitespace-nowrap transition-all duration-150",
+    isActive(href) ? "nav-link--active" : ""
   ].join(" ");
 const searchClass = [
-  "rounded-md border px-3 py-2 text-sm transition whitespace-nowrap",
-  currentPath === "/search"
-    ? "border-teal-600 bg-teal-700 text-white dark:border-teal-300 dark:bg-teal-300 dark:text-slate-950"
-    : "border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)]"
+  "nav-link nav-link--search px-3 py-2 text-sm font-bold whitespace-nowrap transition-all duration-150",
+  currentPath === "/search" ? "nav-link--active" : ""
 ].join(" ");
 
 const pagefindFilters = Object.entries(pagefind?.filters ?? {}).flatMap(([key, value]) => {
@@ -111,68 +107,72 @@ const isoDate = (value?: Date | string) => (value ? new Date(value).toISOString(
   <body>
     <div id="reading-progress" aria-hidden="true"></div>
     <a href="#main" class="skip-link">跳到正文</a>
-    <header class="container py-5">
-      <nav class="surface rounded-lg px-4 py-3 navbar-glass" aria-label="主导航">
-        <div class="flex items-center justify-between gap-4">
-          <a href="/" class="flex items-center gap-3 font-semibold group" aria-label={`${site.name}首页`}>
-            <span class="grid h-9 w-9 place-items-center rounded-md bg-gradient-to-tr from-teal-700 to-emerald-500 text-white font-bold transition group-hover:scale-105 shadow-md shadow-teal-500/20">七</span>
-            <span class="hidden sm:inline font-display text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-[var(--text)] to-[var(--text)] group-hover:from-teal-600 group-hover:to-emerald-500 transition-all duration-300">{site.name}</span>
+    <header class="site-header">
+      <div class="container">
+        <nav class="navbar" aria-label="主导航">
+          <a href="/" class="navbar__logo" aria-label={`${site.name}首页`}>
+            <span class="navbar__logo-icon">七</span>
+            <span class="navbar__logo-text">{site.name}</span>
           </a>
-          <div class="hidden items-center gap-1 md:flex">
+          <div class="navbar__links" role="list">
+            {navItems.map((item) => (
+              <a class={navClass(item.href)} href={item.href} aria-current={isActive(item.href) ? "page" : undefined} role="listitem">
+                {item.label}
+              </a>
+            ))}
+          </div>
+          <div class="navbar__actions">
+            <a href="/search" class={searchClass} aria-current={currentPath === "/search" ? "page" : undefined}>
+              🔍 搜索
+            </a>
+            <button
+              id="theme-toggle"
+              class="navbar__theme-btn"
+              aria-label="切换主题"
+              aria-pressed="false"
+            >
+              <svg class="sun-icon hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" width="18" height="18">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <svg class="moon-icon block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" width="18" height="18">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+              </svg>
+            </button>
+          </div>
+          <!-- Mobile nav -->
+          <div class="navbar__mobile-links">
             {navItems.map((item) => (
               <a class={navClass(item.href)} href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
                 {item.label}
               </a>
             ))}
           </div>
-          <div class="flex items-center gap-2">
-            <a href="/search" class={searchClass} aria-current={currentPath === "/search" ? "page" : undefined}>
-              搜索
-            </a>
-            <button
-              id="theme-toggle"
-              class="theme-toggle-btn h-10 w-10 flex items-center justify-center rounded-md border border-[var(--border)] text-[var(--muted)] transition-all duration-300 hover:text-[var(--text)] hover:bg-black/5 dark:hover:bg-white/5"
-              aria-label="切换主题"
-              aria-pressed="false"
-            >
-              <!-- Sun Icon -->
-              <svg class="sun-icon h-5 w-5 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="5"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-              </svg>
-              <!-- Moon Icon -->
-              <svg class="moon-icon h-5 w-5 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div class="mt-3 flex flex-wrap gap-2 pb-1 md:hidden">
-          {navItems.map((item) => (
-            <a class={navClass(item.href)} href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
-              {item.label}
-            </a>
-          ))}
-        </div>
-      </nav>
+        </nav>
+      </div>
     </header>
     <main id="main">
       <slot />
     </main>
-    <footer class="container py-10 text-sm text-[var(--muted)]">
-      <div class="border-t border-[var(--border)] pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="font-sans">{site.name} · 为长期写作、静态部署和 AI 辅助创作而建。</p>
-        <div class="flex gap-4">
-          <a href="/rss.xml" class="hover:text-[var(--text)] transition-colors">RSS 订阅</a>
-          <span>·</span>
-          <a href="/studio" class="hover:text-[var(--text)] transition-colors">创作台</a>
+    <footer class="site-footer">
+      <div class="container">
+        <div class="site-footer__inner">
+          <div class="site-footer__brand">
+            <span class="navbar__logo-icon" aria-hidden="true">七</span>
+            <div>
+              <strong class="site-footer__name">{site.name}</strong>
+              <p class="site-footer__desc">为长期写作、静态部署和 AI 辅助创作而建。</p>
+            </div>
+          </div>
+          <div class="site-footer__links">
+            <a href="/rss.xml" class="site-footer__link">RSS 订阅</a>
+            <a href="/studio" class="site-footer__link">创作台</a>
+            <a href="/about" class="site-footer__link">关于</a>
+            <a href="/search" class="site-footer__link">搜索</a>
+          </div>
         </div>
       </div>
     </footer>
