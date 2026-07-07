@@ -337,8 +337,8 @@ const hasMultipleImages =
                     position={backgroundWallpaper.banner?.position}
                     widths={[640, 750, 1080]}
                     sizes="100vw"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchpriority={index === 0 ? "high" : undefined}
+                    loading="eager"
+                    fetchpriority={index === 0 ? "high" : "low"}
                     quality={mobileQuality}
                 />
             </div>
@@ -464,6 +464,16 @@ const hasMultipleImages =
                     if (slides[i].classList.contains('active')) return i;
                 }
                 return 0;
+            }
+
+            function preloadVisibleSlideImages(slides) {
+                for (var i = 0; i < slides.length; i++) {
+                    var img = slides[i].querySelector('img');
+                    if (!img || !img.src) continue;
+                    img.loading = 'eager';
+                    var preload = new Image();
+                    preload.src = img.currentSrc || img.src;
+                }
             }
 
             function applySlideChange(slides, nextIndex) {
@@ -594,6 +604,9 @@ const hasMultipleImages =
 
             // 随机首张
             var slides = getVisibleSlides();
+            if (window.innerWidth < 1024) {
+                preloadVisibleSlideImages(slides);
+            }
             if (slides.length > 1) {
                 var randomIdx = window.innerWidth < 1024 ? 0 : Math.floor(Math.random() * slides.length);
                 for (var k = 0; k < slides.length; k++) {

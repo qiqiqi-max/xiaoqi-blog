@@ -240,6 +240,8 @@ const siteLang = lang.replace("_", "-");
         configHue,
         defaultMode: siteConfig.themeColor.defaultMode ?? "light",
         defaultWallpaperMode: backgroundWallpaper.mode,
+        defaultBannerCarouselEnabled:
+          backgroundWallpaper.common?.carousel?.enable ?? false,
         isWallpaperSwitchable:
           backgroundWallpaper.switchable ?? true,
         darkTheme: expressiveCodeConfig.darkTheme,
@@ -359,6 +361,9 @@ const siteLang = lang.replace("_", "-");
         wallpaperMode = WALLPAPER_BANNER;
         if (storedWallpaperMode && storedWallpaperMode !== WALLPAPER_BANNER) {
           localStorage.setItem("wallpaperMode", WALLPAPER_BANNER);
+        }
+        if (defaultBannerCarouselEnabled) {
+          localStorage.setItem("bannerCarouselEnabled", "true");
         }
       }
 

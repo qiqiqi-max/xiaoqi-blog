@@ -1227,6 +1227,16 @@ export function getStoredBannerCarouselEnabled(): boolean {
 	) {
 		return getDefaultBannerCarouselEnabled();
 	}
+	if (
+		backgroundWallpaper.mode === WALLPAPER_BANNER &&
+		getDefaultBannerCarouselEnabled() &&
+		typeof window !== "undefined" &&
+		window.innerWidth < 1024 &&
+		checkIsHomePage(window.location.pathname)
+	) {
+		localStorage.setItem("bannerCarouselEnabled", "true");
+		return true;
+	}
 	const stored = localStorage.getItem("bannerCarouselEnabled");
 	if (stored === null) {
 		return getDefaultBannerCarouselEnabled();
