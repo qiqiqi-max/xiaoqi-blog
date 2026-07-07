@@ -31,6 +31,7 @@ const localPlaylist =
 const managerConfigStr = JSON.stringify({
 	mode: config.mode,
 	meting: config.meting,
+	playlistUrl: config.playlistUrl ? url(config.playlistUrl) : undefined,
 	localPlaylist: localPlaylist,
 	volume: config.volume ?? 0.7,
 	playMode: config.playMode ?? "list",
@@ -166,6 +167,60 @@ const managerConfigStr = JSON.stringify({
             }
         }
         throw new Error('All Meting APIs failed');
+    }
+
+    function resolveLocalMediaUrl(path, kind) {
+        if (!path) return '';
+        if (/^(https?:)?\/\//.test(path) || path.startsWith('data:') || path.startsWith('blob:')) {
+            return path;
+        }
+        if (path.startsWith('/')) return path;
+
+        var normalized = path.replace(/^\.?\//, '');
+        if (!normalized.includes('/')) {
+            if (kind === 'cover') return '/assets/music/covers/' + normalized;
+            return '/assets/music/' + normalized;
+        }
+        return '/' + normalized;
+    }
+
+    function normalizeLocalTrack(item) {
+        if (!item) return null;
+        var rawUrl = item.url || item.src || item.audio;
+        if (!rawUrl) return null;
+
+        var rawLrc = item.lrc || item.lyric || '';
+        var lrc = rawLrc && (rawLrc.includes('\n') || /^\[\d{2}:\d{2}/.test(rawLrc))
+            ? rawLrc
+            : resolveLocalMediaUrl(rawLrc, 'lrc');
+
+        return {
+            name: item.name || item.title || 'Untitled',
+            artist: item.artist || item.author || 'Unknown',
+            url: resolveLocalMediaUrl(rawUrl, 'audio'),
+            pic: resolveLocalMediaUrl(item.pic || item.cover || item.image, 'cover'),
+            lrc: lrc
+        };
+    }
+
+    async function fetchLocalPlaylist() {
+        var fallback = config.localPlaylist || [];
+        if (!config.playlistUrl) return fallback;
+
+        try {
+            var res = await fetch(config.playlistUrl, { cache: 'no-cache' });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+
+            var data = await res.json();
+            var source = Array.isArray(data) ? data : (data.playlist || data.songs || []);
+            if (!Array.isArray(source)) throw new Error('Invalid playlist format');
+
+            var playlist = source.map(normalizeLocalTrack).filter(Boolean);
+            return playlist.length > 0 ? playlist : fallback;
+        } catch (e) {
+            console.warn('Local playlist fetch failed:', e);
+            return fallback;
+        }
     }
 
     // ── Lyrics ───────────────────────────────────────────────
@@ -358,7 +413,7 @@ const managerConfigStr = JSON.stringify({
             if (config.mode === 'meting' && config.meting) {
                 await fetchMetingData();
             } else if (config.mode === 'local') {
-                state.playlist = config.localPlaylist || [];
+                state.playlist = await fetchLocalPlaylist();
             }
 
             if (state.playlist.length > 0) {

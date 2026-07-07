@@ -578,6 +578,12 @@ const hasMultipleImages =
             window.addEventListener('bannerCarouselChange', function(e) {
                 e.detail && e.detail.enabled ? startAutoPlay() : stopAutoPlay();
             });
+            window.addEventListener('bannerCarouselStep', function(e) {
+                if (!isBannerWallpaperMode()) return;
+                var direction = e.detail && e.detail.direction === 'prev' ? -1 : 1;
+                var slides = getVisibleSlides();
+                changeToSlide(getCurrentIndex(slides) + direction);
+            });
             window.addEventListener('wallpaperModeChange', function(e) {
                 if (e.detail && (e.detail.mode === 'banner' || e.detail.mode === 'fullscreen')) {
                     if (isCarouselEnabled()) startAutoPlay();

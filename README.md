@@ -19,4 +19,23 @@ pnpm run dev
 pnpm run build
 ```
 
+## 自定义壁纸和音乐
+
+- 壁纸文件在 `public/assets/wallpapers/`，当前站点使用 `xiaoqi-desktop-*.png` 和 `xiaoqi-mobile-*.png`。直接替换同名文件即可换背景，也可以在 `src/config/backgroundWallpaper.ts` 里调整图片列表。
+- 音乐文件放到 `public/assets/music/`，封面放到 `public/assets/music/covers/`，然后编辑 `public/data/music-playlist.json`：
+
+```json
+{
+	"playlist": [
+		{
+			"name": "歌曲名",
+			"artist": "歌手",
+			"url": "/assets/music/song.mp3",
+			"cover": "/assets/music/covers/song.webp",
+			"lrc": ""
+		}
+	]
+}
+```
+
 部署目标为 Cloudflare Pages。

@@ -304,6 +304,14 @@ function toggleBannerCarouselEnabled() {
 	setBannerCarouselEnabled(bannerCarouselEnabled);
 }
 
+function stepBannerWallpaper(direction: "prev" | "next") {
+	window.dispatchEvent(
+		new CustomEvent("bannerCarouselStep", {
+			detail: { direction },
+		}),
+	);
+}
+
 function toggleSakuraEnabled() {
 	sakuraEnabled = !sakuraEnabled;
 	setSakuraEnabled(sakuraEnabled);
@@ -670,6 +678,24 @@ $effect(() => {
                              class:left-5={bannerCarouselEnabled}></div>
                     </div>
                 </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <button
+                        class="btn-regular rounded-md h-10 flex items-center justify-center active:scale-95 transition-all"
+                        title="上一张壁纸"
+                        aria-label="上一张壁纸"
+                        onclick={() => stepBannerWallpaper("prev")}
+                    >
+                        <Icon icon="material-symbols:chevron-left-rounded" class="text-[1.35rem]"></Icon>
+                    </button>
+                    <button
+                        class="btn-regular rounded-md h-10 flex items-center justify-center active:scale-95 transition-all"
+                        title="下一张壁纸"
+                        aria-label="下一张壁纸"
+                        onclick={() => stepBannerWallpaper("next")}
+                    >
+                        <Icon icon="material-symbols:chevron-right-rounded" class="text-[1.35rem]"></Icon>
+                    </button>
+                </div>
                 {/if}
                 <!-- Waves Animation Switch -->
                 {#if isWavesSwitchable}

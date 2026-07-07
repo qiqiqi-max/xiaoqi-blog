@@ -1,16 +1,27 @@
 import type { BackgroundWallpaperConfig } from "@/types/backgroundWallpaper";
 
 export const backgroundWallpaper: BackgroundWallpaperConfig = {
-	mode: "none",
-	switchable: false,
+	mode: "banner",
+	switchable: true,
 	playerEnable: false,
-	src: "",
+	src: {
+		desktop: [
+			"/assets/wallpapers/xiaoqi-desktop-1.png",
+			"/assets/wallpapers/xiaoqi-desktop-2.png",
+			"/assets/wallpapers/xiaoqi-desktop-3.png",
+		],
+		mobile: [
+			"/assets/wallpapers/xiaoqi-mobile-1.png",
+			"/assets/wallpapers/xiaoqi-mobile-2.png",
+			"/assets/wallpapers/xiaoqi-mobile-3.png",
+		],
+	},
 	common: {
-		dimOpacity: 0.2,
+		dimOpacity: 0.28,
 		playerMode: "order",
 		homeText: {
 			enable: true,
-			switchable: false,
+			switchable: true,
 			title: "小七的博客",
 			titleSize: "3rem",
 			subtitle: "记录折腾、工具、排障和数字花园。",
@@ -23,7 +34,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			},
 		},
 		navbar: {
-			transparentMode: "semi",
+			transparentMode: "semifull",
 			enableBlur: true,
 			blur: 5,
 		},
@@ -32,21 +43,21 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 				desktop: false,
 				mobile: false,
 			},
-			switchable: false,
+			switchable: true,
 		},
 		gradient: {
 			enable: {
-				desktop: false,
-				mobile: false,
+				desktop: true,
+				mobile: true,
 			},
-			height: "10%",
-			switchable: false,
+			height: "24vh",
+			switchable: true,
 		},
 		carousel: {
-			enable: false,
-			interval: 5000,
-			transitionEffect: "zoom",
-			switchable: false,
+			enable: true,
+			interval: 7000,
+			transitionEffect: "fade",
+			switchable: true,
 		},
 	},
 	banner: {
