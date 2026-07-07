@@ -6,22 +6,19 @@ import type { PlantUMLConfig } from "../types/plantumlConfig";
  * 用于控制 markdown 文章中 `plantuml` 代码块到 PlantUML 服务器 SVG 图片的
  * 构建时编码与客户端渲染行为。支持明暗双主题与自建 PlantUML 服务器。
  *
- * @see https://plantuml.com/zh/theme
- * @see https://plantuml.com/zh/server
  */
 export const plantumlConfig: PlantUMLConfig = {
 	/**
 	 * 是否启用 PlantUML 渲染能力。
 	 * 关闭时 `plantuml` 代码块退化为普通代码高亮，由 Expressive Code 处理。
 	 */
-	enable: true,
+	enable: false,
 
 	/**
 	 * PlantUML 服务器地址（不含尾部斜杠也可，会自动归一化）。
-	 * 默认使用官方公共服务器；敏感内容请部署自建服务器（例如
-	 * `plantuml/plantuml-server` Docker 镜像），并把此字段替换为自建地址。
+	 * 需要使用时再填入自己的服务器地址。
 	 */
-	server: "https://www.plantuml.com/plantuml",
+	server: "",
 
 	/**
 	 * 亮色模式下注入到 PlantUML 源码的主题名（对应 `!theme <name>`）。

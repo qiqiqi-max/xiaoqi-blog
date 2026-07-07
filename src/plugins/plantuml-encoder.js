@@ -3,7 +3,6 @@ import pako from "pako";
 /**
  * PlantUML 编码字母表：`0-9A-Za-z-_`。
  * 与标准 base64 不同，PlantUML 使用自定义映射以便放入 URL path 段。
- * @see https://plantuml.com/text-encoding
  */
 const PLANTUML_ALPHABET =
 	"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_";
@@ -132,7 +131,7 @@ export function injectTheme(source, themeName) {
  * 拼接 PlantUML 服务器地址与编码串生成可直接访问的 SVG URL。
  * 自动去除 `server` 尾部的斜杠，避免出现 `//svg/`。
  *
- * @param {string} server PlantUML 服务器根地址，例如 `https://www.plantuml.com/plantuml`
+ * @param {string} server PlantUML 服务器根地址
  * @param {string} encoded 经 {@link encodePlantUML} 产生的编码串
  * @returns {string} 形如 `<server>/svg/<encoded>` 的完整 URL
  */

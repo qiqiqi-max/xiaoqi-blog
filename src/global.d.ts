@@ -8,10 +8,8 @@ declare global {
 	interface Window {
 		// biome-ignore lint/suspicious/noExplicitAny: External library
 		swup: any;
-		spineModelInitialized?: boolean;
 		floatingTOCListenersInitialized?: boolean;
-		// biome-ignore lint/suspicious/noExplicitAny: External library
-		spinePlayerInstance?: any;
+		blogCachedSubtitle?: string;
 		pagefind: {
 			search: (query: string) => Promise<{
 				results: Array<{
@@ -19,7 +17,7 @@ declare global {
 				}>;
 			}>;
 		};
-		__fireflyMusic?: {
+		__blogMusic?: {
 			init: () => Promise<void>;
 			getState: () => {
 				playlist: Array<{

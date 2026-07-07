@@ -4,15 +4,15 @@ import { buildUrl, encodePlantUML, injectTheme } from "./plantuml-encoder.js";
 /**
  * @typedef {Object} RemarkPlantumlOptions
  * @property {boolean} [enable=true] 是否启用 PlantUML 处理，false 时 plantuml 代码块原样交给下游处理
- * @property {string} [server="https://www.plantuml.com/plantuml"] PlantUML 服务器地址
+ * @property {string} [server=""] PlantUML 服务器地址
  * @property {string} [lightTheme=""] 亮色模式注入的 PlantUML 主题名，空串不注入
  * @property {string} [darkTheme=""] 暗色模式注入的 PlantUML 主题名，空串不注入
  */
 
 /** @type {RemarkPlantumlOptions} */
 const DEFAULT_OPTIONS = {
-	enable: true,
-	server: "https://www.plantuml.com/plantuml",
+	enable: false,
+	server: "",
 	lightTheme: "",
 	darkTheme: "",
 };

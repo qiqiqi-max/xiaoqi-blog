@@ -1,7 +1,4 @@
 ---
-import Live2DWidget from "@components/features/Live2DWidget.astro";
-
-import SpineModel from "@components/features/SpineModel.astro";
 import Footer from "@components/layout/Footer.astro";
 import Navbar from "@components/layout/Navbar.astro";
 import SideBar from "@components/layout/SideBar.astro";
@@ -15,7 +12,6 @@ import TypewriterText from "@/components/features/TypewriterText.astro";
 import CategoryBar from "@/components/layout/CategoryBar.astro";
 import {
 	backgroundWallpaper,
-	live2dWidgetConfig,
 	sidebarLayoutConfig,
 	siteConfig,
 } from "@/config";
@@ -659,11 +655,11 @@ const hasMultipleImages =
                 if (Array.isArray(subtitles) && subtitles.length > 0 && !subtitleElement.querySelector('.typewriter')) {
                     // Use a global variable to persist the subtitle across Swup navigations
                     // This variable will be reset on full page reload (F5), meeting the requirement
-                    if (!window.fireflyCachedSubtitle) {
+                    if (!window.blogCachedSubtitle) {
                         const randomIndex = Math.floor(Math.random() * subtitles.length);
-                        window.fireflyCachedSubtitle = subtitles[randomIndex];
+                        window.blogCachedSubtitle = subtitles[randomIndex];
                     }
-                    subtitleElement.textContent = window.fireflyCachedSubtitle;
+                    subtitleElement.textContent = window.blogCachedSubtitle;
                 }
             } catch (e) {
                 console.error("Failed to parse subtitles", e);
@@ -906,8 +902,6 @@ const hasMultipleImages =
             </div>
         </div>
 
-        <SpineModel></SpineModel>
-        {live2dWidgetConfig.enable && <Live2DWidget config={live2dWidgetConfig} />}
     </div>
 </div>
 
@@ -933,4 +927,3 @@ const hasMultipleImages =
   }
 
 </style>
-
