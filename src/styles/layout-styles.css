@@ -828,3 +828,51 @@ html[data-wallpaper-mode="fullscreen"] body:not(.wallpaper-initialized) .w-full.
         transition: top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s !important;
     }
 }
+
+/* Mobile home wallpaper ratio tuning.
+   The current wallpapers are 16:9 GIFs, so portrait phones should not stretch
+   them into a tall cover crop. Keep desktop/tablet behavior untouched. */
+@media (max-width: 767px) and (orientation: portrait) {
+    html[data-wallpaper-mode="banner"] body.enable-banner #wallpaper-wrapper:not(.mobile-hide-banner) {
+        height: clamp(17rem, 72vw, 22rem) !important;
+        min-height: clamp(17rem, 72vw, 22rem) !important;
+        top: 0 !important;
+        transform: none !important;
+        background: #f4f6f8 !important;
+    }
+
+    html[data-wallpaper-mode="banner"] body.enable-banner #banner-images-container {
+        background: #f4f6f8 !important;
+    }
+
+    html[data-wallpaper-mode="banner"] body.enable-banner #banner-images-container .slide-item.block.lg\:hidden > div,
+    html[data-wallpaper-mode="banner"] body.enable-banner #banner-images-container .banner-image-slot-mobile > div {
+        background: #f4f6f8 !important;
+    }
+
+    html[data-wallpaper-mode="banner"] body.enable-banner #banner-images-container .slide-item.block.lg\:hidden img,
+    html[data-wallpaper-mode="banner"] body.enable-banner #banner-images-container .banner-image-slot-mobile img {
+        object-fit: contain !important;
+        object-position: center top !important;
+        background: #f4f6f8 !important;
+    }
+
+    html[data-wallpaper-mode="banner"] body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
+        top: calc(clamp(17rem, 72vw, 22rem) - 2.75rem) !important;
+        min-height: calc(100vh - (clamp(17rem, 72vw, 22rem) - 2.75rem)) !important;
+    }
+
+    html[data-wallpaper-mode="banner"] body.enable-banner #main-grid {
+        transform: none !important;
+    }
+
+    html[data-wallpaper-mode="banner"] body.enable-banner .banner-home-text-overlay {
+        align-items: flex-end !important;
+        justify-content: center !important;
+        padding: 1rem 1rem 4rem !important;
+    }
+
+    html[data-wallpaper-mode="banner"] body.enable-banner .banner-title {
+        font-size: min(var(--banner-title-size, 3rem), 9vw) !important;
+    }
+}
