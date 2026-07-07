@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "飞萤之火自无梦的长夜亮起",
 
 	// 站点 URL
-	site_url: "https://firefly.cuteleaf.cn",
+	site_url: "https://277.bbroot.com",
 
 	// 站点描述
 	description:
