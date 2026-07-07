@@ -119,6 +119,11 @@ const hasBannerSettings =
 	isGradientSwitchable ||
 	isBannerTitleSwitchable ||
 	isBannerCarouselSwitchable;
+let supportsWallpaperCarouselControls = $derived(
+	wallpaperMode === WALLPAPER_BANNER ||
+		wallpaperMode === WALLPAPER_FULLSCREEN ||
+		wallpaperMode === WALLPAPER_OVERLAY,
+);
 const overlaySwitchableConfig =
 	backgroundWallpaper.overlay?.switchable ?? false;
 const isOverlaySettingsSwitchable =
@@ -628,7 +633,7 @@ $effect(() => {
     {/if}
 
     <!-- Banner Settings Section -->
-    {#if (wallpaperMode === WALLPAPER_BANNER || wallpaperMode === WALLPAPER_FULLSCREEN) && hasBannerSettings}
+    {#if supportsWallpaperCarouselControls && hasBannerSettings}
         <div class="mt-2 mb-2">
             <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3 mb-2
                 before:w-1 before:h-4 before:rounded-md before:bg-(--primary)

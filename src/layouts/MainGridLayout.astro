@@ -405,6 +405,9 @@ const hasMultipleImages =
             if (!container) return;
 
             var WALLPAPER_BANNER = 'banner';
+            var WALLPAPER_FULLSCREEN = 'fullscreen';
+            var WALLPAPER_OVERLAY = 'overlay';
+            var CAROUSEL_INDEX_KEY = 'bannerCarouselCurrentIndex';
             var interval = parseInt(container.dataset.carouselInterval || '5000', 10);
             var switchable = container.dataset.carouselSwitchable === 'true';
             var defaultEnabled = container.dataset.carouselEnabled === 'true';
@@ -439,7 +442,7 @@ const hasMultipleImages =
 
             function isBannerWallpaperMode() {
                 var mode = document.documentElement.getAttribute('data-wallpaper-mode');
-                return mode === WALLPAPER_BANNER || mode === 'fullscreen';
+                return mode === WALLPAPER_BANNER || mode === WALLPAPER_FULLSCREEN || mode === WALLPAPER_OVERLAY;
             }
 
             // 获取当前设备可见的 slide-item
@@ -488,6 +491,9 @@ const hasMultipleImages =
                     if (j === nextIndex) slides[j].classList.add('active');
                     else slides[j].classList.remove('active');
                 }
+                try {
+                    sessionStorage.setItem(CAROUSEL_INDEX_KEY, String(nextIndex));
+                } catch (err) {}
             }
 
             function changeToSlide(targetIndex, resetProgress) {
@@ -595,7 +601,7 @@ const hasMultipleImages =
                 changeToSlide(getCurrentIndex(slides) + direction);
             });
             window.addEventListener('wallpaperModeChange', function(e) {
-                if (e.detail && (e.detail.mode === 'banner' || e.detail.mode === 'fullscreen')) {
+                if (e.detail && (e.detail.mode === WALLPAPER_BANNER || e.detail.mode === WALLPAPER_FULLSCREEN || e.detail.mode === WALLPAPER_OVERLAY)) {
                     if (isCarouselEnabled()) startAutoPlay();
                 } else {
                     stopAutoPlay();
@@ -608,7 +614,14 @@ const hasMultipleImages =
                 preloadVisibleSlideImages(slides);
             }
             if (slides.length > 1) {
-                var randomIdx = window.innerWidth < 1024 ? 0 : Math.floor(Math.random() * slides.length);
+                var storedIndex = null;
+                try {
+                    storedIndex = sessionStorage.getItem(CAROUSEL_INDEX_KEY);
+                } catch (err) {}
+                var parsedIndex = storedIndex === null ? NaN : parseInt(storedIndex, 10);
+                var randomIdx = Number.isFinite(parsedIndex)
+                    ? ((parsedIndex % slides.length) + slides.length) % slides.length
+                    : Math.floor(Math.random() * slides.length);
                 for (var k = 0; k < slides.length; k++) {
                     if (k === randomIdx) slides[k].classList.add('active');
                     else slides[k].classList.remove('active');
