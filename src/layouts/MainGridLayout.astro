@@ -595,7 +595,7 @@ const hasMultipleImages =
             // 随机首张
             var slides = getVisibleSlides();
             if (slides.length > 1) {
-                var randomIdx = Math.floor(Math.random() * slides.length);
+                var randomIdx = window.innerWidth < 1024 ? 0 : Math.floor(Math.random() * slides.length);
                 for (var k = 0; k < slides.length; k++) {
                     if (k === randomIdx) slides[k].classList.add('active');
                     else slides[k].classList.remove('active');

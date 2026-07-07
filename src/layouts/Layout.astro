@@ -340,9 +340,27 @@ const siteLang = lang.replace("_", "-");
       const WALLPAPER_FULLSCREEN = "fullscreen";
       const WALLPAPER_OVERLAY = "overlay";
       const WALLPAPER_NONE = "none";
-      const wallpaperMode = isWallpaperSwitchable
-        ? localStorage.getItem("wallpaperMode") || defaultWallpaperMode
+      function isMobileHomePageRuntime() {
+        return window.innerWidth < 1024 && (
+          window.location.pathname === baseUrl ||
+          (baseUrl !== '/' && window.location.pathname === baseUrl.replace(/\/$/, '')) ||
+          window.location.pathname === "/"
+        );
+      }
+
+      const storedWallpaperMode = isWallpaperSwitchable
+        ? localStorage.getItem("wallpaperMode")
+        : null;
+      let wallpaperMode = isWallpaperSwitchable
+        ? storedWallpaperMode || defaultWallpaperMode
         : defaultWallpaperMode;
+
+      if (defaultWallpaperMode === WALLPAPER_BANNER && isMobileHomePageRuntime()) {
+        wallpaperMode = WALLPAPER_BANNER;
+        if (storedWallpaperMode && storedWallpaperMode !== WALLPAPER_BANNER) {
+          localStorage.setItem("wallpaperMode", WALLPAPER_BANNER);
+        }
+      }
 
       // 设置data-wallpaper-mode属性
       document.documentElement.setAttribute(

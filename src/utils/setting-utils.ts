@@ -874,6 +874,19 @@ export function getStoredWallpaperMode(): WALLPAPER_MODE {
 		return backgroundWallpaper.mode;
 	}
 
+	if (
+		backgroundWallpaper.mode === WALLPAPER_BANNER &&
+		typeof window !== "undefined" &&
+		window.innerWidth < 1024 &&
+		checkIsHomePage(window.location.pathname)
+	) {
+		const storedMode = localStorage.getItem("wallpaperMode") as WALLPAPER_MODE | null;
+		if (storedMode && storedMode !== WALLPAPER_BANNER) {
+			localStorage.setItem("wallpaperMode", WALLPAPER_BANNER);
+		}
+		return WALLPAPER_BANNER;
+	}
+
 	const isSwitchable = backgroundWallpaper.switchable ?? true;
 	if (!isSwitchable) {
 		localStorage.removeItem("wallpaperMode");

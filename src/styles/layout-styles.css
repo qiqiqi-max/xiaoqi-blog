@@ -855,6 +855,7 @@ html[data-wallpaper-mode="fullscreen"] body:not(.wallpaper-initialized) .w-full.
         object-fit: contain !important;
         object-position: center top !important;
         background: #f4f6f8 !important;
+        opacity: 1 !important;
     }
 
     html[data-wallpaper-mode="banner"] body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
