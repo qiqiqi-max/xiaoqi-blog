@@ -6,18 +6,22 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	playerEnable: false,
 	src: {
 		desktop: [
-			"/assets/wallpapers/xiaoqi-desktop-1.png",
-			"/assets/wallpapers/xiaoqi-desktop-2.png",
-			"/assets/wallpapers/xiaoqi-desktop-3.png",
+			"/assets/wallpapers/kuroha-01-first-snow.gif",
+			"/assets/wallpapers/kuroha-02-yuyu-v2.gif",
+			"/assets/wallpapers/kuroha-03-moment.gif",
+			"/assets/wallpapers/kuroha-04-moment-person-1.gif",
+			"/assets/wallpapers/kuroha-05-moment-person-3.gif",
 		],
 		mobile: [
-			"/assets/wallpapers/xiaoqi-mobile-1.png",
-			"/assets/wallpapers/xiaoqi-mobile-2.png",
-			"/assets/wallpapers/xiaoqi-mobile-3.png",
+			"/assets/wallpapers/kuroha-01-first-snow.gif",
+			"/assets/wallpapers/kuroha-02-yuyu-v2.gif",
+			"/assets/wallpapers/kuroha-03-moment.gif",
+			"/assets/wallpapers/kuroha-04-moment-person-1.gif",
+			"/assets/wallpapers/kuroha-05-moment-person-3.gif",
 		],
 	},
 	common: {
-		dimOpacity: 0.28,
+		dimOpacity: 0.38,
 		playerMode: "order",
 		homeText: {
 			enable: true,

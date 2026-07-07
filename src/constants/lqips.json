@@ -1,10 +1,4 @@
 {
   "src:assets/images/cover.avif": "7c6f966a628a816e82",
-  "src:assets/images/avatar.avif": "dcd8d5d1cecabea9a9",
-  "public:assets/wallpapers/xiaoqi-mobile-3.png": "1d4d4b255c76494780",
-  "public:assets/wallpapers/xiaoqi-mobile-2.png": "4a373580382297501f",
-  "public:assets/wallpapers/xiaoqi-mobile-1.png": "1b4347395551756438",
-  "public:assets/wallpapers/xiaoqi-desktop-3.png": "1d4c4b255c7649477f",
-  "public:assets/wallpapers/xiaoqi-desktop-2.png": "4a383580382396501f",
-  "public:assets/wallpapers/xiaoqi-desktop-1.png": "1b4346385551756538"
+  "src:assets/images/avatar.avif": "dcd8d5d1cecabea9a9"
 }
