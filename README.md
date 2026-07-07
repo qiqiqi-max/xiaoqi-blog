@@ -38,4 +38,19 @@ pnpm run build
 }
 ```
 
+## 随手记
+
+随手记放在 `src/content/notes/`，新建 `.md` 或 `.mdx` 文件即可。基础 frontmatter：
+
+```md
+---
+title: 一条小笔记
+published: 2026-07-07
+description: 简短摘要
+tags: [记录]
+---
+
+正文内容
+```
+
 部署目标为 Cloudflare Pages。
