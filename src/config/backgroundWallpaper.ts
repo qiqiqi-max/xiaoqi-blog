@@ -13,11 +13,11 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			"/assets/wallpapers/kuroha-05-moment-person-3.gif",
 		],
 		mobile: [
-			"/assets/wallpapers/mobile/kuroha-04-moment-person-1-mobile.gif",
-			"/assets/wallpapers/mobile/kuroha-05-moment-person-3-mobile.gif",
-			"/assets/wallpapers/mobile/kuroha-03-moment-mobile.gif",
-			"/assets/wallpapers/mobile/kuroha-02-yuyu-v2-mobile.gif",
-			"/assets/wallpapers/mobile/kuroha-01-first-snow-mobile.gif",
+			"/assets/wallpapers/mobile/kuroha-04-moment-person-1-mobile-v3.gif",
+			"/assets/wallpapers/mobile/kuroha-05-moment-person-3-mobile-v3.gif",
+			"/assets/wallpapers/mobile/kuroha-03-moment-mobile-v3.gif",
+			"/assets/wallpapers/mobile/kuroha-02-yuyu-v2-mobile-v3.gif",
+			"/assets/wallpapers/mobile/kuroha-01-first-snow-mobile-v3.gif",
 		],
 	},
 	common: {

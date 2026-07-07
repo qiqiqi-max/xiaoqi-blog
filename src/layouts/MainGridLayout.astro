@@ -33,6 +33,7 @@ import {
 	getResponsiveSidebarConfig,
 	type ResponsiveSidebarConfig,
 } from "@/utils/responsive-utils";
+import { url } from "@/utils/url-utils";
 import Layout from "./Layout.astro";
 
 import "@/styles/markdown.css";
@@ -329,17 +330,21 @@ const hasMultipleImages =
          data-carousel-interval={bannerCarouselInterval}
          data-carousel-effect={bannerCarouselEffect}>
         {backgroundImages.mobile.map((src, index) => (
-            <div class:list={["slide-item block lg:hidden", index === 0 && "active"]} data-index={index}>
-                <ImageWrapper
+            <div
+                class:list={["slide-item mobile-wallpaper-slide block lg:hidden", index === 0 && "active"]}
+                data-index={index}
+                data-wallpaper-id={src.split("/").pop()?.replace(/\.[^.]+$/, "")}
+                style={`--mobile-slide-index: ${index}; --mobile-slide-count: ${backgroundImages.mobile.length}; --mobile-slide-delay: ${index * bannerCarouselInterval}ms; --mobile-slide-duration: ${backgroundImages.mobile.length * bannerCarouselInterval}ms;`}
+            >
+                <img
                     alt="Mobile background image of the blog"
-                    class="object-cover h-full w-full"
-                    src={src}
-                    position={backgroundWallpaper.banner?.position}
-                    widths={[640, 750, 1080]}
-                    sizes="100vw"
+                    class="mobile-wallpaper-image h-full w-full"
+                    src={url(src)}
+                    style={`object-position: ${backgroundWallpaper.banner?.position ?? "center"}`}
                     loading="eager"
-                    fetchpriority={index === 0 ? "high" : "low"}
-                    quality={mobileQuality}
+                    fetchpriority={index === 0 ? "high" : "auto"}
+                    decoding="async"
+                    draggable="false"
                 />
             </div>
         ))}
@@ -408,7 +413,7 @@ const hasMultipleImages =
             var WALLPAPER_FULLSCREEN = 'fullscreen';
             var WALLPAPER_OVERLAY = 'overlay';
             var CAROUSEL_INDEX_KEY = 'bannerCarouselCurrentIndex';
-            var MOBILE_WALLPAPER_FIX_VERSION = '2026-07-07-gif-carousel-v2';
+            var MOBILE_WALLPAPER_FIX_VERSION = '2026-07-07-css-mobile-carousel-v3';
             var interval = parseInt(container.dataset.carouselInterval || '5000', 10);
             var switchable = container.dataset.carouselSwitchable === 'true';
             var defaultEnabled = container.dataset.carouselEnabled === 'true';
@@ -486,8 +491,41 @@ const hasMultipleImages =
                     var img = slides[i].querySelector('img');
                     if (!img || !img.src) continue;
                     img.loading = 'eager';
+                    img.fetchPriority = 'high';
                     var preload = new Image();
                     preload.src = img.currentSrc || img.src;
+                }
+            }
+
+            function syncMobileHomeSlideStyles(slides, activeIndex) {
+                if (!isMobileHomePage()) return;
+                container.setAttribute('data-mobile-carousel-runtime', 'js');
+                for (var i = 0; i < slides.length; i++) {
+                    var isActive = i === activeIndex;
+                    var slide = slides[i];
+                    slide.style.opacity = isActive ? '1' : '0';
+                    slide.style.zIndex = isActive ? '12' : '2';
+                    slide.style.pointerEvents = 'none';
+                    slide.style.transition = 'opacity 800ms ease-in-out';
+                    var img = slide.querySelector('img');
+                    if (!img) continue;
+                    img.loading = 'eager';
+                    img.fetchPriority = 'high';
+                    var mode = document.documentElement.getAttribute('data-wallpaper-mode');
+                    var wallpaperId = slide.getAttribute('data-wallpaper-id') || '';
+                    var isFullscreenPersonWallpaper =
+                        mode === WALLPAPER_FULLSCREEN &&
+                        wallpaperId === 'kuroha-05-moment-person-3-mobile-v3';
+                    img.style.opacity = '1';
+                    img.style.objectFit = mode === WALLPAPER_BANNER ? 'contain' : 'cover';
+                    img.style.objectPosition = isFullscreenPersonWallpaper ? '38% center' : 'center center';
+                    if (mode !== WALLPAPER_OVERLAY) {
+                        img.style.transform = 'none';
+                        img.style.filter = 'none';
+                    } else {
+                        img.style.removeProperty('transform');
+                        img.style.removeProperty('filter');
+                    }
                 }
             }
 
@@ -503,6 +541,7 @@ const hasMultipleImages =
                     if (j === nextIndex) slides[j].classList.add('active');
                     else slides[j].classList.remove('active');
                 }
+                syncMobileHomeSlideStyles(slides, nextIndex);
                 try {
                     sessionStorage.setItem(CAROUSEL_INDEX_KEY, String(nextIndex));
                 } catch (err) {}
@@ -626,17 +665,21 @@ const hasMultipleImages =
                 preloadVisibleSlideImages(slides);
             }
             if (slides.length > 1) {
-                var storedIndex = null;
-                try {
-                    storedIndex = sessionStorage.getItem(CAROUSEL_INDEX_KEY);
-                } catch (err) {}
-                var parsedIndex = storedIndex === null ? NaN : parseInt(storedIndex, 10);
-                var randomIdx = Number.isFinite(parsedIndex)
-                    ? ((parsedIndex % slides.length) + slides.length) % slides.length
-                    : Math.floor(Math.random() * slides.length);
-                for (var k = 0; k < slides.length; k++) {
-                    if (k === randomIdx) slides[k].classList.add('active');
-                    else slides[k].classList.remove('active');
+                if (isMobileHomePage()) {
+                    try {
+                        sessionStorage.removeItem(CAROUSEL_INDEX_KEY);
+                    } catch (err) {}
+                    applySlideChange(slides, 0);
+                } else {
+                    var storedIndex = null;
+                    try {
+                        storedIndex = sessionStorage.getItem(CAROUSEL_INDEX_KEY);
+                    } catch (err) {}
+                    var parsedIndex = storedIndex === null ? NaN : parseInt(storedIndex, 10);
+                    var randomIdx = Number.isFinite(parsedIndex)
+                        ? ((parsedIndex % slides.length) + slides.length) % slides.length
+                        : Math.floor(Math.random() * slides.length);
+                    applySlideChange(slides, randomIdx);
                 }
             }
 

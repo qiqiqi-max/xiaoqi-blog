@@ -893,3 +893,67 @@ html[data-wallpaper-mode="fullscreen"] body:not(.wallpaper-initialized) .w-full.
         display: none !important;
     }
 }
+
+@media (max-width: 1023px) {
+    html[data-wallpaper-mode="banner"] body.is-home #banner-images-container[data-carousel-enabled="true"]:not([data-mobile-carousel-runtime="js"]) .mobile-wallpaper-slide,
+    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"]:not([data-mobile-carousel-runtime="js"]) .mobile-wallpaper-slide,
+    html[data-wallpaper-mode="overlay"] body.is-home #banner-images-container[data-carousel-enabled="true"]:not([data-mobile-carousel-runtime="js"]) .mobile-wallpaper-slide {
+        animation: mobile-home-wallpaper-cycle var(--mobile-slide-duration, 35000ms) linear infinite;
+        animation-delay: var(--mobile-slide-delay, 0ms);
+        opacity: 0;
+        z-index: 2;
+        transition: none !important;
+        pointer-events: none;
+        will-change: opacity;
+    }
+
+    html[data-wallpaper-mode="banner"] body.is-home #banner-images-container[data-carousel-enabled="true"]:not([data-mobile-carousel-runtime="js"]) .mobile-wallpaper-slide.active,
+    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"]:not([data-mobile-carousel-runtime="js"]) .mobile-wallpaper-slide.active,
+    html[data-wallpaper-mode="overlay"] body.is-home #banner-images-container[data-carousel-enabled="true"]:not([data-mobile-carousel-runtime="js"]) .mobile-wallpaper-slide.active {
+        opacity: 0;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    html[data-wallpaper-mode="banner"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide > div,
+    html[data-wallpaper-mode="banner"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide img,
+    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide > div,
+    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide img,
+    html[data-wallpaper-mode="overlay"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide > div,
+    html[data-wallpaper-mode="overlay"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide img {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    html[data-wallpaper-mode="banner"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide img {
+        object-fit: contain !important;
+        object-position: center center !important;
+        filter: none !important;
+        transform: none !important;
+    }
+
+    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide img {
+        object-fit: cover !important;
+        object-position: center center !important;
+        filter: none !important;
+        transform: none !important;
+    }
+
+    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide[data-wallpaper-id="kuroha-05-moment-person-3-mobile-v3"] img {
+        object-position: 38% center !important;
+    }
+}
+
+@keyframes mobile-home-wallpaper-cycle {
+    0%,
+    18% {
+        opacity: 1;
+        z-index: 10;
+    }
+
+    20%,
+    100% {
+        opacity: 0;
+        z-index: 2;
+    }
+}
