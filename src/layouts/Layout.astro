@@ -357,11 +357,8 @@ const siteLang = lang.replace("_", "-");
         ? storedWallpaperMode || defaultWallpaperMode
         : defaultWallpaperMode;
 
-      if (defaultWallpaperMode === WALLPAPER_BANNER && isMobileHomePageRuntime()) {
+      if (defaultWallpaperMode === WALLPAPER_BANNER && isMobileHomePageRuntime() && !storedWallpaperMode) {
         wallpaperMode = WALLPAPER_BANNER;
-        if (storedWallpaperMode && storedWallpaperMode !== WALLPAPER_BANNER) {
-          localStorage.setItem("wallpaperMode", WALLPAPER_BANNER);
-        }
         if (defaultBannerCarouselEnabled) {
           localStorage.setItem("bannerCarouselEnabled", "true");
         }
