@@ -342,12 +342,24 @@ const siteLang = lang.replace("_", "-");
       const WALLPAPER_FULLSCREEN = "fullscreen";
       const WALLPAPER_OVERLAY = "overlay";
       const WALLPAPER_NONE = "none";
+      const MOBILE_WALLPAPER_FIX_VERSION = "2026-07-07-gif-carousel-v2";
       function isMobileHomePageRuntime() {
         return window.innerWidth < 1024 && (
           window.location.pathname === baseUrl ||
           (baseUrl !== '/' && window.location.pathname === baseUrl.replace(/\/$/, '')) ||
           window.location.pathname === "/"
         );
+      }
+
+      const isMobileHomePage = isMobileHomePageRuntime();
+      const storedFixVersion = localStorage.getItem("mobileWallpaperFixVersion");
+      if (isMobileHomePage && storedFixVersion !== MOBILE_WALLPAPER_FIX_VERSION) {
+        localStorage.setItem("mobileWallpaperFixVersion", MOBILE_WALLPAPER_FIX_VERSION);
+        localStorage.setItem("bannerCarouselEnabled", "true");
+        sessionStorage.removeItem("bannerCarouselCurrentIndex");
+        if (localStorage.getItem("wallpaperMode") === WALLPAPER_NONE) {
+          localStorage.setItem("wallpaperMode", WALLPAPER_BANNER);
+        }
       }
 
       const storedWallpaperMode = isWallpaperSwitchable
@@ -357,7 +369,7 @@ const siteLang = lang.replace("_", "-");
         ? storedWallpaperMode || defaultWallpaperMode
         : defaultWallpaperMode;
 
-      if (defaultWallpaperMode === WALLPAPER_BANNER && isMobileHomePageRuntime() && !storedWallpaperMode) {
+      if (defaultWallpaperMode === WALLPAPER_BANNER && isMobileHomePage && !storedWallpaperMode) {
         wallpaperMode = WALLPAPER_BANNER;
         if (defaultBannerCarouselEnabled) {
           localStorage.setItem("bannerCarouselEnabled", "true");

@@ -408,6 +408,7 @@ const hasMultipleImages =
             var WALLPAPER_FULLSCREEN = 'fullscreen';
             var WALLPAPER_OVERLAY = 'overlay';
             var CAROUSEL_INDEX_KEY = 'bannerCarouselCurrentIndex';
+            var MOBILE_WALLPAPER_FIX_VERSION = '2026-07-07-gif-carousel-v2';
             var interval = parseInt(container.dataset.carouselInterval || '5000', 10);
             var switchable = container.dataset.carouselSwitchable === 'true';
             var defaultEnabled = container.dataset.carouselEnabled === 'true';
@@ -433,7 +434,18 @@ const hasMultipleImages =
                 return '#000';
             }
 
+            function isMobileHomePage() {
+                return window.innerWidth < 1024 && document.body && document.body.classList.contains('is-home');
+            }
+
             function isCarouselEnabled() {
+                if (isMobileHomePage()) {
+                    try {
+                        localStorage.setItem('mobileWallpaperFixVersion', MOBILE_WALLPAPER_FIX_VERSION);
+                        localStorage.setItem('bannerCarouselEnabled', 'true');
+                    } catch (err) {}
+                    return true;
+                }
                 if (!switchable) return defaultEnabled;
                 var stored = localStorage.getItem('bannerCarouselEnabled');
                 if (stored === null) return defaultEnabled;
