@@ -24,8 +24,8 @@ jobs:
         shell: bash
         run: |
           if [[ -z "$CLOUDFLARE_ACCOUNT_ID" || -z "$CLOUDFLARE_API_TOKEN" ]]; then
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Cloudflare deploy skipped: add CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN repository secrets."
+            echo "::error::Cloudflare deploy is not configured. Add CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN repository secrets."
+            exit 1
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
