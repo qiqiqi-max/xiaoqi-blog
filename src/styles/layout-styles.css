@@ -831,9 +831,13 @@ html[data-wallpaper-mode="fullscreen"] body:not(.wallpaper-initialized) .w-full.
 
 /* Mobile home wallpaper tuning. Keep desktop/tablet behavior untouched. */
 @media (max-width: 767px) and (orientation: portrait) {
+    html[data-wallpaper-mode="banner"] body.is-home.enable-banner {
+        --mobile-home-wallpaper-height: clamp(13rem, 56.25vw, 18rem);
+    }
+
     html[data-wallpaper-mode="banner"] body.is-home.enable-banner #wallpaper-wrapper:not(.mobile-hide-banner) {
-        height: clamp(21rem, 64vh, 34rem) !important;
-        min-height: clamp(21rem, 64vh, 34rem) !important;
+        height: var(--mobile-home-wallpaper-height) !important;
+        min-height: var(--mobile-home-wallpaper-height) !important;
         top: 0 !important;
         transform: none !important;
         background: #eaf3f7 !important;
@@ -855,7 +859,7 @@ html[data-wallpaper-mode="fullscreen"] body:not(.wallpaper-initialized) .w-full.
 
     html[data-wallpaper-mode="banner"] body.is-home.enable-banner #banner-images-container .slide-item.block.lg\:hidden img,
     html[data-wallpaper-mode="banner"] body.is-home.enable-banner #banner-images-container .banner-image-slot-mobile img {
-        object-fit: cover !important;
+        object-fit: contain !important;
         object-position: center center !important;
         background: #eaf3f7 !important;
         opacity: 1 !important;
@@ -866,8 +870,8 @@ html[data-wallpaper-mode="fullscreen"] body:not(.wallpaper-initialized) .w-full.
     }
 
     html[data-wallpaper-mode="banner"] body.is-home.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
-        top: calc(clamp(21rem, 64vh, 34rem) - 3rem) !important;
-        min-height: calc(100vh - (clamp(21rem, 64vh, 34rem) - 3rem)) !important;
+        top: calc(var(--mobile-home-wallpaper-height) + 0.75rem) !important;
+        min-height: calc(100vh - (var(--mobile-home-wallpaper-height) + 0.75rem)) !important;
     }
 
     html[data-wallpaper-mode="banner"] body.is-home.enable-banner #main-grid {
@@ -877,10 +881,15 @@ html[data-wallpaper-mode="fullscreen"] body:not(.wallpaper-initialized) .w-full.
     html[data-wallpaper-mode="banner"] body.is-home.enable-banner .banner-home-text-overlay {
         align-items: flex-end !important;
         justify-content: center !important;
-        padding: 1rem 1rem 5rem !important;
+        padding: 0.75rem 1rem 1.25rem !important;
     }
 
     html[data-wallpaper-mode="banner"] body.is-home.enable-banner .banner-title {
-        font-size: min(var(--banner-title-size, 3rem), 9vw) !important;
+        font-size: min(var(--banner-title-size, 3rem), 7vw) !important;
+        margin-bottom: 0 !important;
+    }
+
+    html[data-wallpaper-mode="banner"] body.is-home.enable-banner .banner-subtitle {
+        display: none !important;
     }
 }
