@@ -1,4 +1,4 @@
-import {
+﻿import {
 	type NavBarConfig,
 	type NavBarLink,
 	type NavBarSearchConfig,
@@ -38,6 +38,9 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 
 	// 随手记
 	links.push(LinkPresets.Notes);
+
+	// 工具箱
+	links.push(LinkPresets.Tools);
 
 	// 我的及其子菜单
 	links.push({
@@ -119,6 +122,11 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		name: "随手记",
 		url: "/notes/",
 		icon: "material-symbols:edit-note",
+	},
+	Tools: {
+		name: "工具箱",
+		url: "/tools/",
+		icon: "material-symbols:build",
 	},
 	About: {
 		name: "关于我",

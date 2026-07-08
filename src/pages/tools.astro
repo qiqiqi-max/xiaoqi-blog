@@ -1,0 +1,107 @@
+﻿---
+import { Icon } from "astro-icon/components";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const tools = [
+  {
+    name: "JSON 格式化",
+    description: "格式化和压缩 JSON 数据",
+    icon: "material-symbols:code",
+    url: "/tools/json-formatter/",
+    color: "blue"
+  },
+  {
+    name: "Base64 编解码",
+    description: "Base64 编码和解码工具",
+    icon: "material-symbols:lock",
+    url: "/tools/base64/",
+    color: "green"
+  },
+  {
+    name: "二维码生成器",
+    description: "生成自定义二维码",
+    icon: "material-symbols:qr-code",
+    url: "/tools/qrcode/",
+    color: "purple"
+  },
+  {
+    name: "颜色转换",
+    description: "RGB、HEX、HSL 颜色格式转换",
+    icon: "material-symbols:palette",
+    url: "/tools/color-converter/",
+    color: "pink"
+  },
+  {
+    name: "时间戳转换",
+    description: "Unix 时间戳与日期时间互转",
+    icon: "material-symbols:schedule",
+    url: "/tools/timestamp/",
+    color: "orange"
+  },
+  {
+    name: "Markdown 编辑器",
+    description: "在线 Markdown 编辑和预览",
+    icon: "material-symbols:edit-note",
+    url: "/tools/markdown/",
+    color: "teal"
+  }
+];
+
+const colorClasses = {
+  blue: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  green: "bg-green-500/10 text-green-600 dark:text-green-400",
+  purple: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
+  pink: "bg-pink-500/10 text-pink-600 dark:text-pink-400",
+  orange: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
+  teal: "bg-teal-500/10 text-teal-600 dark:text-teal-400"
+};
+---
+
+<MainGridLayout title="工具箱" description="一些实用的在线小工具">
+  <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+    <div class="card-base z-10 px-6 md:px-9 py-6 relative w-full">
+      <div class="mb-6">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
+            <Icon is:inline name="material-symbols:build" class="text-[1.5rem]" />
+          </div>
+          <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+            工具箱
+          </div>
+        </div>
+        <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+          一些实用的在线小工具，持续更新中
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {tools.map((tool) => (
+          <a
+            href={tool.url}
+            class="group rounded-lg border border-(--line-divider) bg-(--card-bg) p-5 hover:border-(--primary) hover:bg-(--btn-card-bg-hover) hover:shadow-lg transition-all duration-200"
+          >
+            <div class="flex items-start gap-3">
+              <div class={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center ${colorClasses[tool.color]}`}>
+                <Icon is:inline name={tool.icon} class="text-2xl" />
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-lg font-bold text-neutral-900 dark:text-neutral-100 group-hover:text-(--primary) transition-colors mb-1">
+                  {tool.name}
+                </div>
+                <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  {tool.description}
+                </p>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-(--line-divider)">
+        <p class="text-sm text-center text-neutral-500 dark:text-neutral-400">
+          更多工具正在开发中，敬请期待
+        </p>
+      </div>
+    </div>
+  </div>
+</MainGridLayout>
