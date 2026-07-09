@@ -1,47 +1,95 @@
 # 小七的博客
 
-这里是小七的个人博客源码，也是一个用来记录折腾过程、工具经验、排障笔记和数字花园建设的静态站点。
+一个用 Astro 构建的个人博客与数字花园，用来记录工具折腾、Windows 排障、AI 工作流、随手笔记和个人兴趣内容。
 
-- 线上地址：[https://277.bbroot.com](https://277.bbroot.com)
-- GitHub 仓库：[qiqiqi-max/xiaoqi-blog](https://github.com/qiqiqi-max/xiaoqi-blog)
-- 部署平台：Cloudflare Pages
+<p align="center">
+  <a href="https://277.bbroot.com">在线访问</a>
+  ·
+  <a href="https://github.com/qiqiqi-max/xiaoqi-blog">GitHub 仓库</a>
+  ·
+  <a href="https://277.bbroot.com/tools/">工具箱</a>
+</p>
+
+<p align="center">
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-7-ff5d01?logo=astro&logoColor=white">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white">
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4-06b6d4?logo=tailwindcss&logoColor=white">
+  <img alt="Cloudflare Pages" src="https://img.shields.io/badge/Cloudflare_Pages-deploy-f38020?logo=cloudflarepages&logoColor=white">
+</p>
+
+## 项目预览
+
+### 首页
+
+![首页桌面端预览](.github/assets/home-desktop.png)
+
+### 工具箱
+
+![工具箱页面预览](.github/assets/tools-desktop.png)
+
+### 移动端
+
+<p align="center">
+  <img src=".github/assets/home-mobile.png" alt="首页移动端预览" width="320">
+</p>
 
 ## 项目简介
 
-这个项目不是官方模板的演示站，而是按我的日常使用习惯整理出来的个人博客。它主要承担三件事：写长文、记随手笔记、沉淀自己常用的工具和问题处理经验。
+这个博客不是一个单纯的模板展示页，而是我自己长期使用和维护的个人站点。它把正式文章、随手笔记、工具箱、动态壁纸、音乐播放器和追番记录整合在一起，适合作为个人数字花园、知识库和作品展示入口。
 
-站点内容目前围绕这些方向：
+目前站点主要记录这些内容：
 
 - Windows 软件迁移、系统排障和日常折腾记录
 - AI 工具、效率工具和个人工作流整理
-- 个人数字花园建设记录
-- 随手记，用来保存短笔记、小想法和临时记录
-- 工具箱，用来集中放一些自己常用的小工具入口
-- 追番和番组记录，作为个人兴趣内容展示
+- 个人数字花园建设过程
+- 随手记、小想法和临时笔记
+- 自用工具箱与常用入口
+- 追番、番组和兴趣内容展示
 
-## 主要功能
+## 功能亮点
 
-- **文章系统**：支持 Markdown / MDX、分类、标签、归档、RSS 和站点地图。
-- **随手记**：独立的短笔记入口，适合记录零散想法和排障片段。
-- **工具箱**：导航栏中有独立入口，后续可以继续加入 JSON、Base64、二维码、时间戳等在线工具。
-- **动态壁纸**：首页支持 5 张 Kuroha 动图轮播壁纸，桌面端和手机端分别适配。
-- **音乐播放器**：支持本地音乐播放，播放器已经加入导航弹窗和左侧边栏。
-- **搜索**：使用 Pagefind 生成静态全文搜索，不依赖后端服务。
-- **追番 / 番组**：保留个人追番与 Bangumi 展示页面。
-- **主题体验**：支持亮色、暗色、跟随系统、主题色切换和响应式布局。
-- **Cloudflare 部署**：推送到 GitHub 后，由 Cloudflare Pages 自动构建上线。
+### 内容与写作
+
+- 支持 Markdown / MDX 写作
+- 支持文章分类、标签、归档、置顶和 RSS
+- 支持独立的「随手记」短笔记入口
+- 支持 Pagefind 静态全文搜索
+- 支持代码高亮、数学公式、提示块和文章目录
+
+### 视觉与交互
+
+- 首页动态壁纸轮播，桌面端和手机端分别适配
+- 支持亮色、暗色、跟随系统和主题色切换
+- 支持 Swup 页面过渡
+- 支持响应式布局，桌面端双侧栏，移动端单列阅读
+- 头像、公告、站点统计、站点信息、分类、标签等侧边栏组件可配置
+
+### 音乐与工具
+
+- 本地音乐播放器，支持导航栏弹窗和左侧栏播放控件
+- 本地 JSON 歌单配置，音乐文件可直接放在 `public/assets/music/`
+- 独立「工具箱」页面，后续可以继续扩展 JSON、Base64、二维码、时间戳等在线工具
+
+### 个人兴趣页面
+
+- 追番页面
+- Bangumi 番组记录页面
+- 留言板页面
+- 关于我页面
 
 ## 技术栈
 
-- **框架**：Astro 7
-- **语言**：TypeScript
-- **样式**：Tailwind CSS 4
-- **内容**：Markdown / MDX / Astro Content Collections
-- **交互**：Svelte Islands、Swup、原生浏览器 API
-- **搜索**：Pagefind
-- **图标**：Iconify / Astro Icon
-- **部署**：Cloudflare Pages
-- **包管理**：pnpm
+| 类型 | 技术 |
+| --- | --- |
+| 框架 | Astro 7 |
+| 语言 | TypeScript |
+| 样式 | Tailwind CSS 4 |
+| 内容 | Astro Content Collections、Markdown、MDX |
+| 交互 | Svelte Islands、Swup、原生浏览器 API |
+| 搜索 | Pagefind |
+| 图标 | Iconify、Astro Icon |
+| 部署 | Cloudflare Pages |
+| 包管理 | pnpm |
 
 ## 项目结构
 
@@ -64,7 +112,7 @@ public/
 scripts/               构建辅助脚本
 ```
 
-## 本地运行
+## 快速开始
 
 安装依赖：
 
@@ -84,7 +132,7 @@ pnpm run dev
 pnpm run build
 ```
 
-本地预览构建结果：
+预览构建结果：
 
 ```bash
 pnpm run preview
@@ -126,7 +174,7 @@ src/content/posts/
 src/content/notes/
 ```
 
-文章基础 frontmatter 示例：
+文章 frontmatter 示例：
 
 ```yaml
 ---
@@ -141,7 +189,7 @@ lang: zh_CN
 ---
 ```
 
-随手记基础 frontmatter 示例：
+随手记 frontmatter 示例：
 
 ```yaml
 ---
@@ -155,13 +203,13 @@ draft: false
 
 ## 自定义壁纸
 
-壁纸配置在：
+壁纸配置：
 
 ```text
 src/config/backgroundWallpaper.ts
 ```
 
-壁纸文件放在：
+壁纸文件：
 
 ```text
 public/assets/wallpapers/
@@ -172,13 +220,13 @@ public/assets/wallpapers/mobile/
 
 ## 自定义音乐
 
-音乐文件放在：
+音乐文件：
 
 ```text
 public/assets/music/
 ```
 
-歌单配置在：
+歌单配置：
 
 ```text
 public/data/music-playlist.json
@@ -210,12 +258,19 @@ Build output directory: dist
 Node.js version: 18 或更高
 ```
 
-自定义域名：
+当前自定义域名：
 
 ```text
 277.bbroot.com
 ```
 
-## 说明
+## 后续计划
 
-这是一个个人博客项目，站点内容、图片、音乐和文字记录主要用于个人展示与备份。代码部分可作为 Astro 静态博客搭建参考，内容版权归小七所有。
+- 继续补充工具箱里的实用在线工具
+- 优化随手记的展示方式
+- 增加更多个人工作流和工具整理文章
+- 持续打磨移动端壁纸和阅读体验
+
+## 版权说明
+
+本仓库代码可作为 Astro 静态博客搭建参考。站点中的文章内容、截图、图片、音乐资源和个人素材主要用于个人展示与备份，未经允许请勿直接搬运。
