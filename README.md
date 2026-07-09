@@ -273,4 +273,8 @@ Node.js version: 18 或更高
 
 ## 版权说明
 
-本仓库代码可作为 Astro 静态博客搭建参考。站点中的文章内容、截图、图片、音乐资源和个人素材主要用于个人展示与备份，未经允许请勿直接搬运。
+本仓库代码基于 MIT License 发布，可作为 Astro 静态博客搭建参考。
+
+本博客在布局、组件设计和部分代码实现上参考了 [CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)。Firefly 基于 [saicaca/fuwari](https://github.com/saicaca/fuwari) 二次开发，相关版权声明已保留在 [LICENSE](./LICENSE) 和 [NOTICE](./NOTICE) 中。
+
+站点中的文章内容、截图、图片、音乐资源和个人素材主要用于个人展示与备份，未经允许请勿直接搬运。

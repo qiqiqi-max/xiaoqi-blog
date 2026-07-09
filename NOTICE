@@ -1,0 +1,22 @@
+Xiaoqi Blog Attribution Notice
+
+This project is an Astro-based personal blog maintained by qiqiqi-max.
+
+Parts of the layout, component design, and implementation ideas are inspired by
+or adapted from Firefly:
+
+  Project: Firefly
+  Repository: https://github.com/CuteLeaf/Firefly
+  Copyright (c) 2025 CuteLeaf
+  License: MIT License
+
+Firefly is developed based on fuwari:
+
+  Project: fuwari
+  Repository: https://github.com/saicaca/fuwari
+  Copyright (c) 2024 saicaca
+  License: MIT License
+
+The upstream MIT license notice is preserved in LICENSE. Site articles,
+screenshots, images, music files, and other personal materials belong to their
+respective owners and are not intended for direct reuse without permission.
