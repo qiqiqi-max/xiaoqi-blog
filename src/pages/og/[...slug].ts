@@ -119,8 +119,11 @@ export async function GET({
 	}
 
 	let iconPath = "./public/favicon/favicon-dark-192.png";
-	if (siteConfig.favicon.length > 0) {
-		iconPath = `./public${siteConfig.favicon[0].src}`;
+	const pngFavicon = siteConfig.favicon.find((favicon) =>
+		favicon.src.endsWith(".png"),
+	);
+	if (pngFavicon) {
+		iconPath = `./public${pngFavicon.src}`;
 	}
 	const iconBuffer = fs.readFileSync(iconPath);
 	const iconBase64 = `data:image/png;base64,${iconBuffer.toString("base64")}`;

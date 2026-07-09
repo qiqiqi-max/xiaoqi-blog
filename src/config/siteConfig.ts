@@ -54,12 +54,20 @@ export const siteConfig: SiteConfig = {
 	// Favicon 配置
 	favicon: [
 		{
-			// 图标文件路径
+			src: "/favicon/favicon.svg",
+			sizes: "any",
+		},
+		{
 			src: "/favicon/favicon.ico",
-			// 可选，指定主题 'light' | 'dark'
-			// theme: "light",
-			// 可选，图标大小
-			// sizes: "32x32",
+			sizes: "32x32",
+		},
+		{
+			src: "/favicon/favicon-light-180.png",
+			sizes: "180x180",
+		},
+		{
+			src: "/favicon/favicon-light-192.png",
+			sizes: "192x192",
 		},
 	],
 
