@@ -1,0 +1,93 @@
+---
+import ToolPage from "@/components/tools/ToolPage.astro";
+---
+
+<ToolPage
+	title="UUID 生成器"
+	description="批量生成 UUID v4，可选择大小写和是否带连字符。"
+	icon="material-symbols:fingerprint"
+>
+	<div class="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-4">
+		<section class="rounded-lg border border-(--line-divider) bg-(--card-bg) p-4">
+			<h2 class="mb-4 text-lg font-bold text-neutral-900 dark:text-neutral-100">设置</h2>
+			<label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+				生成数量
+				<input id="uuid-count" type="number" min="1" max="200" value="20" class="tool-input mt-1" />
+			</label>
+			<div class="mt-4 grid grid-cols-1 gap-2 text-sm">
+				<label class="tool-check"><input type="checkbox" id="uuid-uppercase" /> 大写</label>
+				<label class="tool-check"><input type="checkbox" id="uuid-no-hyphen" /> 去掉连字符</label>
+			</div>
+			<div class="mt-4 flex flex-wrap gap-3">
+				<button id="uuid-generate" class="btn-regular rounded-lg px-4 py-2 font-medium">生成</button>
+				<button id="uuid-copy" class="btn-regular rounded-lg px-4 py-2 font-medium">复制</button>
+			</div>
+		</section>
+		<section class="rounded-lg border border-(--line-divider) bg-(--card-bg) p-4">
+			<h2 class="mb-3 text-lg font-bold text-neutral-900 dark:text-neutral-100">结果</h2>
+			<textarea id="uuid-output" class="tool-textarea min-h-96" readonly></textarea>
+			<div id="uuid-status" class="mt-4 rounded-lg bg-(--btn-regular-bg) px-4 py-3 text-sm text-neutral-600 dark:text-neutral-300">
+				点击生成 UUID。
+			</div>
+		</section>
+	</div>
+</ToolPage>
+
+<style>
+	.tool-input,
+	.tool-textarea {
+		width: 100%;
+		border-radius: 0.75rem;
+		border: 1px solid var(--line-divider);
+		background: color-mix(in srgb, var(--card-bg) 90%, transparent);
+		padding: 0.75rem 1rem;
+		outline: none;
+	}
+	.tool-textarea {
+		resize: vertical;
+		font-family: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+		line-height: 1.7;
+	}
+	.tool-input:focus,
+	.tool-textarea:focus {
+		border-color: var(--primary);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+	}
+	.tool-check {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+</style>
+
+<script>
+	const countInput = document.querySelector<HTMLInputElement>("#uuid-count")!;
+	const uppercaseInput = document.querySelector<HTMLInputElement>("#uuid-uppercase")!;
+	const noHyphenInput = document.querySelector<HTMLInputElement>("#uuid-no-hyphen")!;
+	const output = document.querySelector<HTMLTextAreaElement>("#uuid-output")!;
+	const status = document.querySelector<HTMLElement>("#uuid-status")!;
+	const generateBtn = document.querySelector<HTMLButtonElement>("#uuid-generate")!;
+	const copyBtn = document.querySelector<HTMLButtonElement>("#uuid-copy")!;
+
+	function makeUuid(): string {
+		let id: string = crypto.randomUUID();
+		if (noHyphenInput.checked) id = id.replaceAll("-", "");
+		if (uppercaseInput.checked) id = id.toUpperCase();
+		return id;
+	}
+
+	function generate() {
+		const count = Math.max(1, Math.min(200, Number(countInput.value) || 20));
+		output.value = Array.from({ length: count }, makeUuid).join("\n");
+		status.textContent = `已生成 ${count} 个 UUID。`;
+	}
+
+	generateBtn.addEventListener("click", generate);
+	copyBtn.addEventListener("click", async () => {
+		if (!output.value) generate();
+		await navigator.clipboard.writeText(output.value);
+		status.textContent = "已复制 UUID。";
+	});
+	[uppercaseInput, noHyphenInput].forEach((el) => el.addEventListener("change", generate));
+	generate();
+</script>

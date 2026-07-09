@@ -1,0 +1,145 @@
+---
+import ToolPage from "@/components/tools/ToolPage.astro";
+---
+
+<ToolPage
+	title="JSON 格式化"
+	description="格式化、压缩和校验 JSON 数据，全部在浏览器本地完成。"
+	icon="material-symbols:code"
+>
+	<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+		<section class="rounded-lg border border-(--line-divider) bg-(--card-bg) p-4">
+			<div class="mb-3 flex items-center justify-between gap-3">
+				<h2 class="text-lg font-bold text-neutral-900 dark:text-neutral-100">输入</h2>
+				<button id="json-sample" class="btn-regular rounded-lg px-3 py-1.5 text-sm">示例</button>
+			</div>
+			<textarea
+				id="json-input"
+				class="tool-textarea min-h-96"
+				placeholder='粘贴 JSON，例如 {"name":"小七","site":"277.bbroot.com"}'
+			></textarea>
+		</section>
+
+		<section class="rounded-lg border border-(--line-divider) bg-(--card-bg) p-4">
+			<div class="mb-3 flex items-center justify-between gap-3">
+				<h2 class="text-lg font-bold text-neutral-900 dark:text-neutral-100">输出</h2>
+				<button id="json-copy" class="btn-regular rounded-lg px-3 py-1.5 text-sm">复制</button>
+			</div>
+			<textarea id="json-output" class="tool-textarea min-h-96" readonly placeholder="处理结果会显示在这里"></textarea>
+		</section>
+	</div>
+
+	<div class="mt-4 flex flex-wrap gap-3">
+		<button id="json-format" class="btn-regular rounded-lg px-4 py-2 font-medium">格式化</button>
+		<button id="json-minify" class="btn-regular rounded-lg px-4 py-2 font-medium">压缩</button>
+		<button id="json-sort" class="btn-regular rounded-lg px-4 py-2 font-medium">排序键名</button>
+		<button id="json-clear" class="btn-regular rounded-lg px-4 py-2 font-medium">清空</button>
+	</div>
+
+	<div id="json-status" class="mt-4 rounded-lg bg-(--btn-regular-bg) px-4 py-3 text-sm text-neutral-600 dark:text-neutral-300">
+		等待输入 JSON。
+	</div>
+</ToolPage>
+
+<style>
+	.tool-textarea {
+		width: 100%;
+		resize: vertical;
+		border-radius: 0.75rem;
+		border: 1px solid var(--line-divider);
+		background: color-mix(in srgb, var(--card-bg) 90%, transparent);
+		padding: 1rem;
+		font-family: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+		font-size: 0.875rem;
+		line-height: 1.65;
+		outline: none;
+	}
+	.tool-textarea:focus {
+		border-color: var(--primary);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+	}
+</style>
+
+<script>
+	type JsonValue =
+		| null
+		| boolean
+		| number
+		| string
+		| JsonValue[]
+		| { [key: string]: JsonValue };
+
+	const input = document.querySelector<HTMLTextAreaElement>("#json-input")!;
+	const output = document.querySelector<HTMLTextAreaElement>("#json-output")!;
+	const status = document.querySelector<HTMLElement>("#json-status")!;
+	const formatBtn = document.querySelector<HTMLButtonElement>("#json-format")!;
+	const minifyBtn = document.querySelector<HTMLButtonElement>("#json-minify")!;
+	const sortBtn = document.querySelector<HTMLButtonElement>("#json-sort")!;
+	const clearBtn = document.querySelector<HTMLButtonElement>("#json-clear")!;
+	const copyBtn = document.querySelector<HTMLButtonElement>("#json-copy")!;
+	const sampleBtn = document.querySelector<HTMLButtonElement>("#json-sample")!;
+
+	function setStatus(message: string, ok = true) {
+		status.textContent = message;
+		status.classList.toggle("text-red-600", !ok);
+		status.classList.toggle("dark:text-red-400", !ok);
+	}
+
+	function sortKeys(value: JsonValue): JsonValue {
+		if (Array.isArray(value)) return value.map(sortKeys);
+		if (value && typeof value === "object") {
+			return Object.keys(value)
+				.sort((a, b) => a.localeCompare(b))
+				.reduce<Record<string, JsonValue>>((result, key) => {
+					result[key] = sortKeys(value[key]);
+					return result;
+				}, {});
+		}
+		return value;
+	}
+
+	function parseJson(): JsonValue {
+		const raw = input.value.trim();
+		if (!raw) throw new Error("请先输入 JSON。");
+		return JSON.parse(raw) as JsonValue;
+	}
+
+	function render(mode: "format" | "minify" | "sort") {
+		try {
+			const parsed = parseJson();
+			const data = mode === "sort" ? sortKeys(parsed) : parsed;
+			output.value = JSON.stringify(data, null, mode === "minify" ? 0 : 2);
+			const bytes = new Blob([output.value]).size;
+			setStatus(`JSON 有效。输出 ${output.value.length} 个字符，约 ${bytes} 字节。`);
+		} catch (error) {
+			setStatus(error instanceof Error ? error.message : "JSON 解析失败。", false);
+		}
+	}
+
+	formatBtn.addEventListener("click", () => render("format"));
+	minifyBtn.addEventListener("click", () => render("minify"));
+	sortBtn.addEventListener("click", () => render("sort"));
+	clearBtn.addEventListener("click", () => {
+		input.value = "";
+		output.value = "";
+		setStatus("已清空。");
+	});
+	copyBtn.addEventListener("click", async () => {
+		if (!output.value) return setStatus("没有可复制的内容。", false);
+		await navigator.clipboard.writeText(output.value);
+		setStatus("已复制输出内容。");
+	});
+	sampleBtn.addEventListener("click", () => {
+		input.value = JSON.stringify(
+			{
+				site: "小七的博客",
+				url: "https://277.bbroot.com",
+				features: ["工具箱", "动态壁纸", "音乐播放器"],
+				updated: new Date().toISOString(),
+			},
+			null,
+			0,
+		);
+		render("format");
+	});
+</script>

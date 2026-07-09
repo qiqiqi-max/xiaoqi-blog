@@ -11,25 +11,11 @@ const tools = [
     color: "blue"
   },
   {
-    name: "Base64 编解码",
-    description: "Base64 编码和解码工具",
-    icon: "material-symbols:lock",
-    url: "/tools/base64/",
+    name: "编码转换",
+    description: "Base64、URL、Unicode、HTML 实体",
+    icon: "material-symbols:swap-horiz",
+    url: "/tools/encoder/",
     color: "green"
-  },
-  {
-    name: "二维码生成器",
-    description: "生成自定义二维码",
-    icon: "material-symbols:qr-code",
-    url: "/tools/qrcode/",
-    color: "purple"
-  },
-  {
-    name: "颜色转换",
-    description: "RGB、HEX、HSL 颜色格式转换",
-    icon: "material-symbols:palette",
-    url: "/tools/color-converter/",
-    color: "pink"
   },
   {
     name: "时间戳转换",
@@ -39,10 +25,38 @@ const tools = [
     color: "orange"
   },
   {
-    name: "Markdown 编辑器",
-    description: "在线 Markdown 编辑和预览",
-    icon: "material-symbols:edit-note",
-    url: "/tools/markdown/",
+    name: "二维码生成器",
+    description: "输入文字或链接生成二维码",
+    icon: "material-symbols:qr-code",
+    url: "/tools/qrcode/",
+    color: "purple"
+  },
+  {
+    name: "图片压缩",
+    description: "压缩图片并转换为 WebP / JPG / PNG",
+    icon: "material-symbols:image",
+    url: "/tools/image-compressor/",
+    color: "pink"
+  },
+  {
+    name: "密码生成器",
+    description: "生成随机强密码",
+    icon: "material-symbols:password",
+    url: "/tools/password-generator/",
+    color: "red"
+  },
+  {
+    name: "UUID 生成器",
+    description: "批量生成 UUID v4",
+    icon: "material-symbols:fingerprint",
+    url: "/tools/uuid-generator/",
+    color: "indigo"
+  },
+  {
+    name: "文本处理",
+    description: "去空行、去重复、排序、大小写转换",
+    icon: "material-symbols:text-fields",
+    url: "/tools/text-processor/",
     color: "teal"
   }
 ];
@@ -53,6 +67,8 @@ const colorClasses = {
   purple: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
   pink: "bg-pink-500/10 text-pink-600 dark:text-pink-400",
   orange: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
+  red: "bg-red-500/10 text-red-600 dark:text-red-400",
+  indigo: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400",
   teal: "bg-teal-500/10 text-teal-600 dark:text-teal-400"
 };
 ---
@@ -70,11 +86,11 @@ const colorClasses = {
           </div>
         </div>
         <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
-          一些实用的在线小工具，持续更新中
+          常用的在线小工具，全部在浏览器本地运行
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {tools.map((tool) => (
           <a
             href={tool.url}
@@ -99,7 +115,7 @@ const colorClasses = {
 
       <div class="mt-8 pt-6 border-t border-(--line-divider)">
         <p class="text-sm text-center text-neutral-500 dark:text-neutral-400">
-          更多工具正在开发中，敬请期待
+          所有工具均为纯前端处理，输入内容不会上传到服务器
         </p>
       </div>
     </div>

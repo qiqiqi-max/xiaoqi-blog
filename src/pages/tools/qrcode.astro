@@ -1,0 +1,125 @@
+---
+import ToolPage from "@/components/tools/ToolPage.astro";
+---
+
+<ToolPage
+	title="二维码生成器"
+	description="输入链接或文字生成二维码，可下载为 PNG 图片。"
+	icon="material-symbols:qr-code"
+>
+	<div class="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-4">
+		<section class="rounded-lg border border-(--line-divider) bg-(--card-bg) p-4">
+			<h2 class="mb-3 text-lg font-bold text-neutral-900 dark:text-neutral-100">内容</h2>
+			<textarea id="qr-input" class="tool-textarea min-h-64" placeholder="输入网址、文本、联系方式等内容"></textarea>
+			<div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+				<label class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+					尺寸
+					<input id="qr-size" type="number" min="160" max="1024" value="320" class="tool-input mt-1" />
+				</label>
+				<label class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+					容错
+					<select id="qr-level" class="tool-input mt-1">
+						<option value="L">低</option>
+						<option value="M" selected>中</option>
+						<option value="Q">较高</option>
+						<option value="H">高</option>
+					</select>
+				</label>
+				<label class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+					边距
+					<input id="qr-margin" type="number" min="0" max="8" value="2" class="tool-input mt-1" />
+				</label>
+			</div>
+			<div class="mt-4 flex flex-wrap gap-3">
+				<button id="qr-generate" class="btn-regular rounded-lg px-4 py-2 font-medium">生成二维码</button>
+				<button id="qr-sample" class="btn-regular rounded-lg px-4 py-2 font-medium">使用站点链接</button>
+			</div>
+			<div id="qr-status" class="mt-4 rounded-lg bg-(--btn-regular-bg) px-4 py-3 text-sm text-neutral-600 dark:text-neutral-300">
+				等待输入内容。
+			</div>
+		</section>
+
+		<section class="rounded-lg border border-(--line-divider) bg-(--card-bg) p-4 flex flex-col items-center">
+			<h2 class="mb-3 self-start text-lg font-bold text-neutral-900 dark:text-neutral-100">预览</h2>
+			<div class="w-full rounded-lg bg-white p-4 flex items-center justify-center">
+				<canvas id="qr-canvas" width="320" height="320"></canvas>
+			</div>
+			<a id="qr-download" class="btn-regular mt-4 rounded-lg px-4 py-2 font-medium" download="qrcode.png">下载 PNG</a>
+		</section>
+	</div>
+</ToolPage>
+
+<style>
+	.tool-textarea,
+	.tool-input {
+		width: 100%;
+		border-radius: 0.75rem;
+		border: 1px solid var(--line-divider);
+		background: color-mix(in srgb, var(--card-bg) 90%, transparent);
+		padding: 0.75rem 1rem;
+		outline: none;
+	}
+	.tool-textarea {
+		resize: vertical;
+		font-size: 0.95rem;
+		line-height: 1.65;
+	}
+	.tool-textarea:focus,
+	.tool-input:focus {
+		border-color: var(--primary);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+	}
+</style>
+
+<script>
+	import QRCode from "qrcode";
+	import type { QRCodeErrorCorrectionLevel } from "qrcode";
+
+	const input = document.querySelector<HTMLTextAreaElement>("#qr-input")!;
+	const sizeInput = document.querySelector<HTMLInputElement>("#qr-size")!;
+	const levelInput = document.querySelector<HTMLSelectElement>("#qr-level")!;
+	const marginInput = document.querySelector<HTMLInputElement>("#qr-margin")!;
+	const canvas = document.querySelector<HTMLCanvasElement>("#qr-canvas")!;
+	const download = document.querySelector<HTMLAnchorElement>("#qr-download")!;
+	const status = document.querySelector<HTMLElement>("#qr-status")!;
+	const generateBtn = document.querySelector<HTMLButtonElement>("#qr-generate")!;
+	const sampleBtn = document.querySelector<HTMLButtonElement>("#qr-sample")!;
+
+	function setStatus(message: string, ok = true) {
+		status.textContent = message;
+		status.classList.toggle("text-red-600", !ok);
+		status.classList.toggle("dark:text-red-400", !ok);
+	}
+
+	async function generate() {
+		const text = input.value.trim();
+		if (!text) return setStatus("请输入要生成二维码的内容。", false);
+		const width = Math.max(160, Math.min(1024, Number(sizeInput.value) || 320));
+		const margin = Math.max(0, Math.min(8, Number(marginInput.value) || 2));
+		try {
+			await QRCode.toCanvas(canvas, text, {
+				width,
+				margin,
+				errorCorrectionLevel: levelInput.value as QRCodeErrorCorrectionLevel,
+				color: {
+					dark: "#111827",
+					light: "#ffffff",
+				},
+			});
+			download.href = canvas.toDataURL("image/png");
+			setStatus("二维码已生成。");
+		} catch (error) {
+			setStatus(error instanceof Error ? error.message : "二维码生成失败。", false);
+		}
+	}
+
+	generateBtn.addEventListener("click", generate);
+	sampleBtn.addEventListener("click", () => {
+		input.value = "https://277.bbroot.com";
+		generate();
+	});
+	[sizeInput, levelInput, marginInput].forEach((el) => el.addEventListener("change", generate));
+	input.addEventListener("input", () => {
+		if (input.value.trim()) generate();
+	});
+</script>

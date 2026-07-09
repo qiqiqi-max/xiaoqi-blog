@@ -1,0 +1,151 @@
+---
+import ToolPage from "@/components/tools/ToolPage.astro";
+---
+
+<ToolPage
+	title="编码转换"
+	description="Base64、URL、Unicode 和 HTML 实体编解码，适合处理链接、文本和配置片段。"
+	icon="material-symbols:swap-horiz"
+>
+	<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+		<section class="rounded-lg border border-(--line-divider) bg-(--card-bg) p-4">
+			<h2 class="mb-3 text-lg font-bold text-neutral-900 dark:text-neutral-100">输入</h2>
+			<textarea id="encoder-input" class="tool-textarea min-h-80" placeholder="输入要转换的文本"></textarea>
+		</section>
+		<section class="rounded-lg border border-(--line-divider) bg-(--card-bg) p-4">
+			<div class="mb-3 flex items-center justify-between gap-3">
+				<h2 class="text-lg font-bold text-neutral-900 dark:text-neutral-100">输出</h2>
+				<button id="encoder-copy" class="btn-regular rounded-lg px-3 py-1.5 text-sm">复制</button>
+			</div>
+			<textarea id="encoder-output" class="tool-textarea min-h-80" readonly placeholder="转换结果"></textarea>
+		</section>
+	</div>
+
+	<div class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+		<button data-action="base64-encode" class="btn-regular rounded-lg px-3 py-2 font-medium">Base64 编码</button>
+		<button data-action="base64-decode" class="btn-regular rounded-lg px-3 py-2 font-medium">Base64 解码</button>
+		<button data-action="url-encode" class="btn-regular rounded-lg px-3 py-2 font-medium">URL 编码</button>
+		<button data-action="url-decode" class="btn-regular rounded-lg px-3 py-2 font-medium">URL 解码</button>
+		<button data-action="unicode-encode" class="btn-regular rounded-lg px-3 py-2 font-medium">Unicode 编码</button>
+		<button data-action="unicode-decode" class="btn-regular rounded-lg px-3 py-2 font-medium">Unicode 解码</button>
+		<button data-action="html-encode" class="btn-regular rounded-lg px-3 py-2 font-medium">HTML 实体编码</button>
+		<button data-action="html-decode" class="btn-regular rounded-lg px-3 py-2 font-medium">HTML 实体解码</button>
+	</div>
+
+	<div id="encoder-status" class="mt-4 rounded-lg bg-(--btn-regular-bg) px-4 py-3 text-sm text-neutral-600 dark:text-neutral-300">
+		选择一种转换方式。
+	</div>
+</ToolPage>
+
+<style>
+	.tool-textarea {
+		width: 100%;
+		resize: vertical;
+		border-radius: 0.75rem;
+		border: 1px solid var(--line-divider);
+		background: color-mix(in srgb, var(--card-bg) 90%, transparent);
+		padding: 1rem;
+		font-family: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+		font-size: 0.875rem;
+		line-height: 1.65;
+		outline: none;
+	}
+	.tool-textarea:focus {
+		border-color: var(--primary);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+	}
+</style>
+
+<script>
+	type EncoderAction =
+		| "base64-encode"
+		| "base64-decode"
+		| "url-encode"
+		| "url-decode"
+		| "unicode-encode"
+		| "unicode-decode"
+		| "html-encode"
+		| "html-decode";
+
+	const input = document.querySelector<HTMLTextAreaElement>("#encoder-input")!;
+	const output = document.querySelector<HTMLTextAreaElement>("#encoder-output")!;
+	const status = document.querySelector<HTMLElement>("#encoder-status")!;
+	const copyBtn = document.querySelector<HTMLButtonElement>("#encoder-copy")!;
+
+	function setStatus(message: string, ok = true) {
+		status.textContent = message;
+		status.classList.toggle("text-red-600", !ok);
+		status.classList.toggle("dark:text-red-400", !ok);
+	}
+
+	function toBase64(text: string): string {
+		const bytes = new TextEncoder().encode(text);
+		let binary = "";
+		bytes.forEach((byte) => (binary += String.fromCharCode(byte)));
+		return btoa(binary);
+	}
+
+	function fromBase64(text: string): string {
+		const binary = atob(text.trim());
+		const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+		return new TextDecoder().decode(bytes);
+	}
+
+	function unicodeEncode(text: string): string {
+		return Array.from(text)
+			.map((char) => {
+				const code = char.codePointAt(0)!.toString(16).padStart(4, "0");
+				return code.length > 4 ? `\\u{${code}}` : `\\u${code}`;
+			})
+			.join("");
+	}
+
+	function unicodeDecode(text: string): string {
+		return text.replace(/\\u\{([0-9a-fA-F]+)\}|\\u([0-9a-fA-F]{4})/g, (_match, longCode, shortCode) =>
+			String.fromCodePoint(parseInt(longCode || shortCode, 16)),
+		);
+	}
+
+	function htmlEncode(text: string): string {
+		const div = document.createElement("div");
+		div.textContent = text;
+		return div.innerHTML;
+	}
+
+	function htmlDecode(text: string): string {
+		const textarea = document.createElement("textarea");
+		textarea.innerHTML = text;
+		return textarea.value;
+	}
+
+	const handlers: Record<EncoderAction, (text: string) => string> = {
+		"base64-encode": toBase64,
+		"base64-decode": fromBase64,
+		"url-encode": (text) => encodeURIComponent(text),
+		"url-decode": (text) => decodeURIComponent(text),
+		"unicode-encode": unicodeEncode,
+		"unicode-decode": unicodeDecode,
+		"html-encode": htmlEncode,
+		"html-decode": htmlDecode,
+	};
+
+	document.querySelectorAll<HTMLButtonElement>("[data-action]").forEach((button) => {
+		button.addEventListener("click", () => {
+			try {
+				const raw = input.value;
+				const action = button.dataset.action as EncoderAction | undefined;
+				if (!action) return;
+				output.value = handlers[action](raw);
+				setStatus("转换完成。");
+			} catch (error) {
+				setStatus(error instanceof Error ? error.message : "转换失败。", false);
+			}
+		});
+	});
+
+	copyBtn.addEventListener("click", async () => {
+		if (!output.value) return setStatus("没有可复制的内容。", false);
+		await navigator.clipboard.writeText(output.value);
+		setStatus("已复制输出内容。");
+	});
+</script>

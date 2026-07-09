@@ -1,0 +1,128 @@
+---
+import ToolPage from "@/components/tools/ToolPage.astro";
+---
+
+<ToolPage
+	title="文本处理"
+	description="去空行、去重复、排序、大小写转换和字数统计。"
+	icon="material-symbols:text-fields"
+>
+	<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+		<section class="rounded-lg border border-(--line-divider) bg-(--card-bg) p-4">
+			<h2 class="mb-3 text-lg font-bold text-neutral-900 dark:text-neutral-100">输入</h2>
+			<textarea id="text-input" class="tool-textarea min-h-96" placeholder="粘贴要处理的文本"></textarea>
+		</section>
+		<section class="rounded-lg border border-(--line-divider) bg-(--card-bg) p-4">
+			<div class="mb-3 flex items-center justify-between gap-3">
+				<h2 class="text-lg font-bold text-neutral-900 dark:text-neutral-100">输出</h2>
+				<button id="text-copy" class="btn-regular rounded-lg px-3 py-1.5 text-sm">复制</button>
+			</div>
+			<textarea id="text-output" class="tool-textarea min-h-96" readonly placeholder="处理结果"></textarea>
+		</section>
+	</div>
+
+	<div class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+		<button data-action="trim-lines" class="btn-regular rounded-lg px-3 py-2 font-medium">去首尾空格</button>
+		<button data-action="remove-empty" class="btn-regular rounded-lg px-3 py-2 font-medium">去空行</button>
+		<button data-action="unique" class="btn-regular rounded-lg px-3 py-2 font-medium">去重复</button>
+		<button data-action="sort-asc" class="btn-regular rounded-lg px-3 py-2 font-medium">升序排序</button>
+		<button data-action="sort-desc" class="btn-regular rounded-lg px-3 py-2 font-medium">降序排序</button>
+		<button data-action="reverse" class="btn-regular rounded-lg px-3 py-2 font-medium">反转行</button>
+		<button data-action="upper" class="btn-regular rounded-lg px-3 py-2 font-medium">转大写</button>
+		<button data-action="lower" class="btn-regular rounded-lg px-3 py-2 font-medium">转小写</button>
+		<button data-action="count" class="btn-regular rounded-lg px-3 py-2 font-medium">统计</button>
+		<button data-action="clear" class="btn-regular rounded-lg px-3 py-2 font-medium">清空</button>
+	</div>
+
+	<div id="text-status" class="mt-4 rounded-lg bg-(--btn-regular-bg) px-4 py-3 text-sm text-neutral-600 dark:text-neutral-300">
+		等待输入文本。
+	</div>
+</ToolPage>
+
+<style>
+	.tool-textarea {
+		width: 100%;
+		resize: vertical;
+		border-radius: 0.75rem;
+		border: 1px solid var(--line-divider);
+		background: color-mix(in srgb, var(--card-bg) 90%, transparent);
+		padding: 1rem;
+		font-size: 0.925rem;
+		line-height: 1.65;
+		outline: none;
+	}
+	.tool-textarea:focus {
+		border-color: var(--primary);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+	}
+</style>
+
+<script>
+	type TextAction =
+		| "trim-lines"
+		| "remove-empty"
+		| "unique"
+		| "sort-asc"
+		| "sort-desc"
+		| "reverse"
+		| "upper"
+		| "lower"
+		| "count"
+		| "clear";
+	type TextResult = [string, string];
+
+	const input = document.querySelector<HTMLTextAreaElement>("#text-input")!;
+	const output = document.querySelector<HTMLTextAreaElement>("#text-output")!;
+	const status = document.querySelector<HTMLElement>("#text-status")!;
+	const copyBtn = document.querySelector<HTMLButtonElement>("#text-copy")!;
+
+	function lines(text: string): string[] {
+		return text.split(/\r?\n/);
+	}
+
+	function setOutput(text: string, message: string) {
+		output.value = text;
+		status.textContent = message;
+	}
+
+	const actions: Record<TextAction, (text: string) => TextResult> = {
+		"trim-lines": (text) => [lines(text).map((line) => line.trim()).join("\n"), "已去除每行首尾空格。"],
+		"remove-empty": (text) => [lines(text).filter((line) => line.trim()).join("\n"), "已去除空行。"],
+		unique: (text) => [Array.from(new Set(lines(text))).join("\n"), "已去除重复行。"],
+		"sort-asc": (text) => [lines(text).sort((a, b) => a.localeCompare(b)).join("\n"), "已按升序排序。"],
+		"sort-desc": (text) => [lines(text).sort((a, b) => b.localeCompare(a)).join("\n"), "已按降序排序。"],
+		reverse: (text) => [lines(text).reverse().join("\n"), "已反转行顺序。"],
+		upper: (text) => [text.toUpperCase(), "已转为大写。"],
+		lower: (text) => [text.toLowerCase(), "已转为小写。"],
+		count: (text) => {
+			const lineCount = text ? lines(text).length : 0;
+			const nonEmpty = lines(text).filter((line) => line.trim()).length;
+			const chars = text.length;
+			const noSpace = text.replace(/\s/g, "").length;
+			const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+			return [text, `行数 ${lineCount}，非空行 ${nonEmpty}，字符 ${chars}，非空白字符 ${noSpace}，词数 ${words}。`];
+		},
+		clear: () => ["", "已清空输出。"],
+	};
+
+	document.querySelectorAll<HTMLButtonElement>("[data-action]").forEach((button) => {
+		button.addEventListener("click", () => {
+			const action = button.dataset.action as TextAction | undefined;
+			if (!action) return;
+			if (action === "clear") {
+				input.value = "";
+				output.value = "";
+				status.textContent = "已清空。";
+				return;
+			}
+			const [result, message] = actions[action](input.value);
+			setOutput(result, message);
+		});
+	});
+
+	copyBtn.addEventListener("click", async () => {
+		if (!output.value) return (status.textContent = "没有可复制的内容。");
+		await navigator.clipboard.writeText(output.value);
+		status.textContent = "已复制输出内容。";
+	});
+</script>
