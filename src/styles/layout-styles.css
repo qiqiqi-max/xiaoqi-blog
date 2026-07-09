@@ -910,8 +910,8 @@ html[data-wallpaper-mode="fullscreen"] body:not(.wallpaper-initialized) .w-full.
     html[data-wallpaper-mode="banner"] body.is-home #banner-images-container[data-carousel-enabled="true"]:not([data-mobile-carousel-runtime="js"]) .mobile-wallpaper-slide.active,
     html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"]:not([data-mobile-carousel-runtime="js"]) .mobile-wallpaper-slide.active,
     html[data-wallpaper-mode="overlay"] body.is-home #banner-images-container[data-carousel-enabled="true"]:not([data-mobile-carousel-runtime="js"]) .mobile-wallpaper-slide.active {
-        opacity: 0;
-        z-index: 2;
+        opacity: 1;
+        z-index: 10;
         pointer-events: none;
     }
 

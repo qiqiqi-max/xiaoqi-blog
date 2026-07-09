@@ -339,10 +339,12 @@ const hasMultipleImages =
                 <img
                     alt="Mobile background image of the blog"
                     class="mobile-wallpaper-image h-full w-full"
-                    src={url(src)}
+                    src={index === 0 ? url(src) : undefined}
+                    data-src={index === 0 ? undefined : url(src)}
+                    data-loaded={index === 0 ? "true" : "false"}
                     style={`object-position: ${backgroundWallpaper.banner?.position ?? "center"}`}
-                    loading="eager"
-                    fetchpriority={index === 0 ? "high" : "auto"}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    fetchpriority={index === 0 ? "high" : "low"}
                     decoding="async"
                     draggable="false"
                 />
@@ -350,17 +352,16 @@ const hasMultipleImages =
         ))}
         {backgroundImages.desktop.map((src, index) => (
             <div class:list={["slide-item hidden lg:block", index === 0 && "active"]} data-index={index}>
-                <ImageWrapper
-                    id="banner"
+                <img
                     alt="Desktop background image of the blog"
-                    class="object-cover h-full"
-                    src={src}
-                    position={backgroundWallpaper.banner?.position}
-                    widths={[1280, 1920, 2560]}
-                    sizes="100vw"
+                    class="desktop-wallpaper-image h-full w-full object-cover"
+                    data-src={url(src)}
+                    data-loaded="false"
+                    style={`object-position: ${backgroundWallpaper.banner?.position ?? "center"}`}
                     loading={index === 0 ? "eager" : "lazy"}
-                    fetchpriority={index === 0 ? "high" : undefined}
-                    quality={configQuality}
+                    fetchpriority={index === 0 ? "high" : "low"}
+                    decoding="async"
+                    draggable="false"
                 />
             </div>
         ))}
@@ -413,7 +414,7 @@ const hasMultipleImages =
             var WALLPAPER_FULLSCREEN = 'fullscreen';
             var WALLPAPER_OVERLAY = 'overlay';
             var CAROUSEL_INDEX_KEY = 'bannerCarouselCurrentIndex';
-            var MOBILE_WALLPAPER_FIX_VERSION = '2026-07-07-css-mobile-carousel-v3';
+            var MOBILE_WALLPAPER_FIX_VERSION = '2026-07-09-mobile-lazy-wallpaper-v4';
             var interval = parseInt(container.dataset.carouselInterval || '5000', 10);
             var switchable = container.dataset.carouselSwitchable === 'true';
             var defaultEnabled = container.dataset.carouselEnabled === 'true';
@@ -486,14 +487,30 @@ const hasMultipleImages =
                 return 0;
             }
 
-            function preloadVisibleSlideImages(slides) {
-                for (var i = 0; i < slides.length; i++) {
-                    var img = slides[i].querySelector('img');
-                    if (!img || !img.src) continue;
-                    img.loading = 'eager';
-                    img.fetchPriority = 'high';
-                    var preload = new Image();
-                    preload.src = img.currentSrc || img.src;
+            function loadSlideImage(slide, highPriority) {
+                if (!slide) return;
+                var img = slide.querySelector('img');
+                if (!img) return;
+                var pendingSrc = img.getAttribute('data-src');
+                if (pendingSrc && !img.getAttribute('src')) {
+                    img.setAttribute('src', pendingSrc);
+                    img.removeAttribute('data-src');
+                    img.setAttribute('data-loaded', 'true');
+                }
+                img.loading = highPriority ? 'eager' : 'lazy';
+                img.fetchPriority = highPriority ? 'high' : 'low';
+            }
+
+            function preloadNearbySlideImage(slides, activeIndex) {
+                if (!slides || slides.length <= 1) return;
+                var nextIndex = (activeIndex + 1) % slides.length;
+                var run = function() {
+                    loadSlideImage(slides[nextIndex], false);
+                };
+                if ('requestIdleCallback' in window) {
+                    window.requestIdleCallback(run, { timeout: 2500 });
+                } else {
+                    setTimeout(run, 1500);
                 }
             }
 
@@ -509,8 +526,8 @@ const hasMultipleImages =
                     slide.style.transition = 'opacity 800ms ease-in-out';
                     var img = slide.querySelector('img');
                     if (!img) continue;
-                    img.loading = 'eager';
-                    img.fetchPriority = 'high';
+                    img.loading = isActive ? 'eager' : 'lazy';
+                    img.fetchPriority = isActive ? 'high' : 'low';
                     var mode = document.documentElement.getAttribute('data-wallpaper-mode');
                     var wallpaperId = slide.getAttribute('data-wallpaper-id') || '';
                     var isFullscreenPersonWallpaper =
@@ -530,6 +547,7 @@ const hasMultipleImages =
             }
 
             function applySlideChange(slides, nextIndex) {
+                loadSlideImage(slides[nextIndex], true);
                 // Slide 效果需要 prev-waiting 辅助类
                 if (effect === 'slide') {
                     for (var i = 0; i < slides.length; i++) {
@@ -542,6 +560,7 @@ const hasMultipleImages =
                     else slides[j].classList.remove('active');
                 }
                 syncMobileHomeSlideStyles(slides, nextIndex);
+                preloadNearbySlideImage(slides, nextIndex);
                 try {
                     sessionStorage.setItem(CAROUSEL_INDEX_KEY, String(nextIndex));
                 } catch (err) {}
@@ -661,9 +680,6 @@ const hasMultipleImages =
 
             // 随机首张
             var slides = getVisibleSlides();
-            if (window.innerWidth < 1024) {
-                preloadVisibleSlideImages(slides);
-            }
             if (slides.length > 1) {
                 if (isMobileHomePage()) {
                     try {
