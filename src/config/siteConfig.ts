@@ -97,7 +97,7 @@ export const siteConfig: SiteConfig = {
 	},
 
 	// 站点开始日期，用于统计运行天数
-	siteStartDate: "2025-01-01",
+	siteStartDate: "2024-07-07",
 
 	// 站点时区（IANA 时区字符串），用于格式化 bangumi、RSS 里的构建日期时间
 	timezone: "Asia/Shanghai",
