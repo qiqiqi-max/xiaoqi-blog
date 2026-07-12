@@ -48,11 +48,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		url: "#",
 		icon: "material-symbols:person",
 		children: [
-			// 追番
-			LinkPresets.Anime,
-
-			// 番组计划
-			LinkPresets.Bangumi,
+			// 预留：后续在此添加新的子菜单项
 		],
 	});
 

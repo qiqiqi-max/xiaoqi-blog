@@ -69,6 +69,11 @@ function filterLinks(link: NavBarLink): NavBarLink | null {
 		return isPageEnabled(link) ? link : null;
 	}
 
+	// 显式配置为空子菜单的父级入口：保留为普通链接占位，方便后续添加子项
+	if (link.children.length === 0) {
+		return isPageEnabled(link) ? link : null;
+	}
+
 	const filteredChildren = link.children.filter(isPageEnabled);
 
 	if (filteredChildren.length === 0) return null;
