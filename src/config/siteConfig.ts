@@ -19,14 +19,7 @@ export const siteConfig: SiteConfig = {
 		"小七的个人博客，记录生活、技术、Windows 排障、AI 工具和个人数字花园建设。",
 
 	// 站点关键词
-	keywords: [
-		"博客",
-		"小七",
-		"数字花园",
-		"AI",
-		"Windows",
-		"排障",
-	],
+	keywords: ["博客", "小七", "数字花园", "AI", "Windows", "排障"],
 
 	// 主题色
 	themeColor: {

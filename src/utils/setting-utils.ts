@@ -880,7 +880,9 @@ export function getStoredWallpaperMode(): WALLPAPER_MODE {
 		window.innerWidth < 1024 &&
 		checkIsHomePage(window.location.pathname)
 	) {
-		const storedMode = localStorage.getItem("wallpaperMode") as WALLPAPER_MODE | null;
+		const storedMode = localStorage.getItem(
+			"wallpaperMode",
+		) as WALLPAPER_MODE | null;
 		if (storedMode && storedMode !== WALLPAPER_BANNER) {
 			localStorage.setItem("wallpaperMode", WALLPAPER_BANNER);
 		}
