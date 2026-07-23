@@ -38,3 +38,6 @@ Firefly-docs/
 cache/
 package/
 .obsidian/
+
+# local debug / preview artifacts
+output/
