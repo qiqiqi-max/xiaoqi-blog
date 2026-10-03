@@ -6,18 +6,18 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	playerEnable: false,
 	src: {
 		desktop: [
-			"/assets/wallpapers/kuroha-01-first-snow.gif",
-			"/assets/wallpapers/kuroha-02-yuyu-v2.gif",
-			"/assets/wallpapers/kuroha-03-moment.gif",
-			"/assets/wallpapers/kuroha-04-moment-person-1.gif",
-			"/assets/wallpapers/kuroha-05-moment-person-3.gif",
+			"/assets/wallpapers/kuroha-01-first-snow.mp4",
+			"/assets/wallpapers/kuroha-02-yuyu-v2.mp4",
+			"/assets/wallpapers/kuroha-03-moment.mp4",
+			"/assets/wallpapers/kuroha-04-moment-person-1.mp4",
+			"/assets/wallpapers/kuroha-05-moment-person-3.mp4",
 		],
 		mobile: [
-			"/assets/wallpapers/mobile/kuroha-04-moment-person-1-mobile-v3.gif",
-			"/assets/wallpapers/mobile/kuroha-05-moment-person-3-mobile-v3.gif",
-			"/assets/wallpapers/mobile/kuroha-03-moment-mobile-v3.gif",
-			"/assets/wallpapers/mobile/kuroha-02-yuyu-v2-mobile-v3.gif",
-			"/assets/wallpapers/mobile/kuroha-01-first-snow-mobile-v3.gif",
+			"/assets/wallpapers/mobile/kuroha-04-moment-person-1-mobile-v3.mp4",
+			"/assets/wallpapers/mobile/kuroha-05-moment-person-3-mobile-v3.mp4",
+			"/assets/wallpapers/mobile/kuroha-03-moment-mobile-v3.mp4",
+			"/assets/wallpapers/mobile/kuroha-02-yuyu-v2-mobile-v3.mp4",
+			"/assets/wallpapers/mobile/kuroha-01-first-snow-mobile-v3.mp4",
 		],
 	},
 	common: {

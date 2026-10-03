@@ -268,6 +268,7 @@ const bannerCarouselEffect =
 	backgroundWallpaper.common?.carousel?.transitionEffect ?? "fade";
 const hasMultipleImages =
 	backgroundImages.desktop.length > 1 || backgroundImages.mobile.length > 1;
+const isWallpaperVideo = (src: string) => /\.(mp4|webm)(\?.*)?$/i.test(src);
 ---
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug}>
@@ -332,33 +333,67 @@ const hasMultipleImages =
                 data-wallpaper-id={src.split("/").pop()?.replace(/\.[^.]+$/, "")}
                 style={`--mobile-slide-index: ${index}; --mobile-slide-count: ${backgroundImages.mobile.length}; --mobile-slide-delay: ${index * bannerCarouselInterval}ms; --mobile-slide-duration: ${backgroundImages.mobile.length * bannerCarouselInterval}ms;`}
             >
-                <img
-                    alt="Mobile background image of the blog"
-                    class="mobile-wallpaper-image h-full w-full"
-                    src={index === 0 ? url(src) : undefined}
-                    data-src={index === 0 ? undefined : url(src)}
-                    data-loaded={index === 0 ? "true" : "false"}
-                    style={`object-position: ${backgroundWallpaper.banner?.position ?? "center"}`}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchpriority={index === 0 ? "high" : "low"}
-                    decoding="async"
-                    draggable="false"
-                />
+                {isWallpaperVideo(src) ? (
+                    <video
+                        aria-label="Mobile background video of the blog"
+                        class="mobile-wallpaper-image wallpaper-media h-full w-full"
+                        src={index === 0 ? url(src) : undefined}
+                        data-src={index === 0 ? undefined : url(src)}
+                        data-loaded={index === 0 ? "true" : "false"}
+                        style={`object-position: ${backgroundWallpaper.banner?.position ?? "center"}`}
+                        autoplay={index === 0}
+                        muted
+                        loop
+                        playsinline
+                        preload={index === 0 ? "auto" : "none"}
+                        disablepictureinpicture
+                        disableremoteplayback
+                    ></video>
+                ) : (
+                    <img
+                        alt="Mobile background image of the blog"
+                        class="mobile-wallpaper-image wallpaper-media h-full w-full"
+                        src={index === 0 ? url(src) : undefined}
+                        data-src={index === 0 ? undefined : url(src)}
+                        data-loaded={index === 0 ? "true" : "false"}
+                        style={`object-position: ${backgroundWallpaper.banner?.position ?? "center"}`}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        fetchpriority={index === 0 ? "high" : "low"}
+                        decoding="async"
+                        draggable="false"
+                    />
+                )}
             </div>
         ))}
         {backgroundImages.desktop.map((src, index) => (
             <div class:list={["slide-item hidden lg:block", index === 0 && "active"]} data-index={index}>
-                <img
-                    alt="Desktop background image of the blog"
-                    class="desktop-wallpaper-image h-full w-full object-cover"
-                    data-src={url(src)}
-                    data-loaded="false"
-                    style={`object-position: ${backgroundWallpaper.banner?.position ?? "center"}`}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchpriority={index === 0 ? "high" : "low"}
-                    decoding="async"
-                    draggable="false"
-                />
+                {isWallpaperVideo(src) ? (
+                    <video
+                        aria-label="Desktop background video of the blog"
+                        class="desktop-wallpaper-image wallpaper-media h-full w-full object-cover"
+                        data-src={url(src)}
+                        data-loaded="false"
+                        style={`object-position: ${backgroundWallpaper.banner?.position ?? "center"}`}
+                        muted
+                        loop
+                        playsinline
+                        preload="none"
+                        disablepictureinpicture
+                        disableremoteplayback
+                    ></video>
+                ) : (
+                    <img
+                        alt="Desktop background image of the blog"
+                        class="desktop-wallpaper-image wallpaper-media h-full w-full object-cover"
+                        data-src={url(src)}
+                        data-loaded="false"
+                        style={`object-position: ${backgroundWallpaper.banner?.position ?? "center"}`}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        fetchpriority={index === 0 ? "high" : "low"}
+                        decoding="async"
+                        draggable="false"
+                    />
+                )}
             </div>
         ))}
     </div>
@@ -485,16 +520,32 @@ const hasMultipleImages =
 
             function loadSlideImage(slide, highPriority) {
                 if (!slide) return;
-                var img = slide.querySelector('img');
+                var img = slide.querySelector('.wallpaper-media');
                 if (!img) return;
                 var pendingSrc = img.getAttribute('data-src');
                 if (pendingSrc && !img.getAttribute('src')) {
+                    if (img.tagName === 'VIDEO') img.preload = highPriority ? 'auto' : 'metadata';
                     img.setAttribute('src', pendingSrc);
                     img.removeAttribute('data-src');
                     img.setAttribute('data-loaded', 'true');
                 }
+                if (img.tagName === 'VIDEO') return;
                 img.loading = highPriority ? 'eager' : 'lazy';
                 img.fetchPriority = highPriority ? 'high' : 'low';
+            }
+
+            function syncSlideVideos(slides, activeIndex) {
+                for (var i = 0; i < slides.length; i++) {
+                    var video = slides[i].querySelector('video.wallpaper-media');
+                    if (!video) continue;
+                    if (i === activeIndex && video.getAttribute('src')) {
+                        video.muted = true;
+                        var playPromise = video.play();
+                        if (playPromise && playPromise.catch) playPromise.catch(function() {});
+                    } else {
+                        video.pause();
+                    }
+                }
             }
 
             function preloadNearbySlideImage(slides, activeIndex) {
@@ -520,10 +571,12 @@ const hasMultipleImages =
                     slide.style.zIndex = isActive ? '12' : '2';
                     slide.style.pointerEvents = 'none';
                     slide.style.transition = 'opacity 800ms ease-in-out';
-                    var img = slide.querySelector('img');
+                    var img = slide.querySelector('.wallpaper-media');
                     if (!img) continue;
-                    img.loading = isActive ? 'eager' : 'lazy';
-                    img.fetchPriority = isActive ? 'high' : 'low';
+                    if (img.tagName !== 'VIDEO') {
+                        img.loading = isActive ? 'eager' : 'lazy';
+                        img.fetchPriority = isActive ? 'high' : 'low';
+                    }
                     var mode = document.documentElement.getAttribute('data-wallpaper-mode');
                     var wallpaperId = slide.getAttribute('data-wallpaper-id') || '';
                     var isFullscreenPersonWallpaper =
@@ -556,6 +609,7 @@ const hasMultipleImages =
                     else slides[j].classList.remove('active');
                 }
                 syncMobileHomeSlideStyles(slides, nextIndex);
+                syncSlideVideos(slides, nextIndex);
                 preloadNearbySlideImage(slides, nextIndex);
                 try {
                     sessionStorage.setItem(CAROUSEL_INDEX_KEY, String(nextIndex));

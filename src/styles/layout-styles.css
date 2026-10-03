@@ -857,7 +857,7 @@ html[data-wallpaper-mode="fullscreen"] body:not(.wallpaper-initialized) .w-full.
         opacity: 0 !important;
     }
 
-    html[data-wallpaper-mode="banner"] body.is-home.enable-banner #banner-images-container .slide-item.block.lg\:hidden img,
+    html[data-wallpaper-mode="banner"] body.is-home.enable-banner #banner-images-container .slide-item.block.lg\:hidden .wallpaper-media,
     html[data-wallpaper-mode="banner"] body.is-home.enable-banner #banner-images-container .banner-image-slot-mobile img {
         object-fit: contain !important;
         object-position: center center !important;
@@ -916,30 +916,30 @@ html[data-wallpaper-mode="fullscreen"] body:not(.wallpaper-initialized) .w-full.
     }
 
     html[data-wallpaper-mode="banner"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide > div,
-    html[data-wallpaper-mode="banner"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide img,
+    html[data-wallpaper-mode="banner"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide .wallpaper-media,
     html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide > div,
-    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide img,
+    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide .wallpaper-media,
     html[data-wallpaper-mode="overlay"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide > div,
-    html[data-wallpaper-mode="overlay"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide img {
+    html[data-wallpaper-mode="overlay"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide .wallpaper-media {
         width: 100% !important;
         height: 100% !important;
     }
 
-    html[data-wallpaper-mode="banner"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide img {
+    html[data-wallpaper-mode="banner"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide .wallpaper-media {
         object-fit: contain !important;
         object-position: center center !important;
         filter: none !important;
         transform: none !important;
     }
 
-    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide img {
+    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide .wallpaper-media {
         object-fit: cover !important;
         object-position: center center !important;
         filter: none !important;
         transform: none !important;
     }
 
-    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide[data-wallpaper-id="kuroha-05-moment-person-3-mobile-v3"] img {
+    html[data-wallpaper-mode="fullscreen"] body.is-home #banner-images-container[data-carousel-enabled="true"] .mobile-wallpaper-slide[data-wallpaper-id="kuroha-05-moment-person-3-mobile-v3"] .wallpaper-media {
         object-position: 38% center !important;
     }
 }
