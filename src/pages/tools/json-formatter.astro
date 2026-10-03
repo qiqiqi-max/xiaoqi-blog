@@ -16,7 +16,7 @@ import ToolPage from "@/components/tools/ToolPage.astro";
 			<textarea
 				id="json-input"
 				class="tool-textarea min-h-96"
-				placeholder='粘贴 JSON，例如 {"name":"小七","site":"277.bbroot.com"}'
+				placeholder='粘贴 JSON，例如 {"name":"Qi","site":"277.bbroot.com"}'
 			></textarea>
 		</section>
 
@@ -132,7 +132,7 @@ import ToolPage from "@/components/tools/ToolPage.astro";
 	sampleBtn.addEventListener("click", () => {
 		input.value = JSON.stringify(
 			{
-				site: "小七的博客",
+				site: "Qi 的博客",
 				url: "https://277.bbroot.com",
 				features: ["工具箱", "动态壁纸", "音乐播放器"],
 				updated: new Date().toISOString(),

@@ -6,7 +6,7 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "小七的博客",
+	title: "Qi 的博客",
 
 	// 站点副标题
 	subtitle: "记录折腾、工具、排障和数字花园",
@@ -16,10 +16,10 @@ export const siteConfig: SiteConfig = {
 
 	// 站点描述
 	description:
-		"小七的个人博客，记录生活、技术、Windows 排障、AI 工具和个人数字花园建设。",
+		"Qi 的个人博客，记录生活、技术、Windows 排障、AI 工具和个人数字花园建设。",
 
 	// 站点关键词
-	keywords: ["博客", "小七", "数字花园", "AI", "Windows", "排障"],
+	keywords: ["博客", "Qi", "数字花园", "AI", "Windows", "排障"],
 
 	// 主题色
 	themeColor: {
@@ -75,10 +75,10 @@ export const siteConfig: SiteConfig = {
 		logo: {
 			type: "icon",
 			value: "material-symbols:home-pin-outline",
-			alt: "小七的博客",
+			alt: "Qi 的博客",
 		},
 		// 导航栏标题
-		title: "小七的博客",
+		title: "Qi 的博客",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中

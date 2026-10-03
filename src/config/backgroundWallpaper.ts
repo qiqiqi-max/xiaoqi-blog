@@ -26,7 +26,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		homeText: {
 			enable: true,
 			switchable: true,
-			title: "小七的博客",
+			title: "Qi 的博客",
 			titleSize: "3rem",
 			subtitle: "记录折腾、工具、排障和数字花园。",
 			subtitleSize: "1.5rem",

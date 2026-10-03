@@ -8,7 +8,7 @@ export const profileConfig: ProfileConfig = {
 	// 3. 远程 URL："https://example.com/avatar.jpg"
 	avatar: "assets/images/avatar.avif",
 
-	name: "小七",
+	name: "Qi",
 
 	bio: "记录生活与技术的点滴",
 
